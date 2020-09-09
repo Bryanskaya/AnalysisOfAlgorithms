@@ -28,8 +28,6 @@ def LevMatrix(s1, s2):
 
     return matrix[n - 1][m - 1]
 
-
-
 def LevRecursion(s1, s2):
     if s1 == '' or s2 == '':
         return abs(len(s1) - len(s2))
