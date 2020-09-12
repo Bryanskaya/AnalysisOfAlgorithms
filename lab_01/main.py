@@ -113,13 +113,15 @@ def TestTime(function, s1, s2):
     print("Время: {:.4} секунд".format(result_time / num_oper))
     print()
 
-def MeasureTime():
-    length = [4, 6, 8, 10, 12, 14]
+def MeasureTime(length):
+    #length = [4, 6, 8, 10, 12, 14]
 
-    for i in range(len(length)):
+    #for i in range(len(length)):
         print("\n--------------------------------------------------------------------------------")
-        len1 = random.choice(length)
-        len2 = random.choice(length)
+        #len1 = random.choice(length)
+        #len2 = random.choice(length)
+        len1 = length
+        len2 = length
 
         s1 = RandomString(len1)
         s2 = RandomString(len2)
@@ -159,7 +161,8 @@ def main():
         elif choice == "4":
             print("\nМинимальное расстояние: ", DamLev(str1, str2))
         elif choice == "5":
-            MeasureTime()
+            length = int(input("Введите длину исследуемой строки: "))
+            MeasureTime(length)
 
 if __name__ == "__main__":
     main()
