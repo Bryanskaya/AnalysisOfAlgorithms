@@ -9,6 +9,7 @@
 
 \usepackage[left=30mm, top=20mm, right=20mm, bottom=20mm, nohead, footskip=7mm]{geometry}
 
+
 \usepackage{listings}
 
 \lstset{
@@ -25,16 +26,16 @@ frame=single,
 tabsize=2,
 captionpos=t,
 breaklines=true,
-breakatwhitespace=false,
+breakatwhitespace=false
 escapeinside={\#*}{*)}
 }
-
 
 \usepackage{titlesec, blindtext, color} 
 \definecolor{gray75}{gray}{0.75}
 \newcommand{\hsp}{\hspace{20pt}}
-\titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter\hsp\textcolor{gray75}{}\hsp}{0pt}{\huge\bfseries}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter{. }}{0pt}{\Large\bfseries}
 \titlespacing{\chapter}{0pt}{-30pt}{12pt} % отступ заголовка сверху
+\titleformat{\section}[hang]{\large\bfseries}{\thesection{. }}{0pt}{\large\bfseries}
 
 
 \begin{document}
@@ -175,7 +176,7 @@ min(D(S1[1..i], S2[1.. j - 1])+1,\\
 	\end{center}
 \end{figure}
 
-\section{Расстояние Левенштейна, использующий рекурсию и матрицу}
+\section{Расстояние Левенштейна, рекурсивный метод с заполнением матрицы}
 \qquadПринцип работы этого алгоритма схож с алгоритмом Дейкстры поиска расстояний в графе. \\
 
 Сначала задаётся матрица размером (N + 1)x(M + 1), все её ячейки заполняются значением +{$\infty$}. Элемент [0][0] заполняется 0, с него и будет начинаться работы алгоритма.\\
@@ -223,16 +224,15 @@ min(D(S1[1..i], S2[1.. j - 1])+1,\\
 	\itemобе строки пустые;
 	\itemтолько одна из строк пустая;
 	\itemполностью совпадающие строки;
-	\item
-	\item
-	\item\item
+	\itemэлементарные тесты на 1 расстояние;
+	\itemс расстоянием больше, чем 1;
+	\itemс возможной транспозицией.
 \end{enumerate}
 
 \chapter{Технологическая часть}
 \section{Выбранный язык программирования}
 Для выполнения этой лабораторной работы был выбран язык программирования Python, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения замеров.
-\section{Инструменты замеров}
-\section{Листинг}
+\section{Листинг кода}
 \begin{lstlisting}[label=some-code, caption = Матричный алгоритм нахождения расстояния Левенштейна]
 def LevMatrix(s1, s2):
 	n = len(s1) + 1
@@ -241,12 +241,12 @@ def LevMatrix(s1, s2):
 	matrix = [[i + j for j in range(m)] for i in range(n)]
 	
 	for i in range(1, n):
-	for j in range(1, m):
-	const = 0 if (s1[i - 1] == s2[j - 1]) else 1
+		for j in range(1, m):
+			const = 0 if (s1[i - 1] == s2[j - 1]) else 1
 	
-	matrix[i][j] = min(matrix[i][j - 1] + 1,
-	matrix[i - 1][j] + 1,
-	matrix[i - 1][j - 1] + const)
+			matrix[i][j] = min(matrix[i][j - 1] + 1,
+							   				 matrix[i - 1][j] + 1,
+		 	  				   			 matrix[i - 1][j - 1] + const)
 	
 	return matrix[n - 1][m - 1]
 	
@@ -259,8 +259,11 @@ def LevRecursion(s1, s2, len1, len2):
 	
 	const = 0 if (s1[len1 - 1] == s2[len2 - 1]) else 1
 	return min(LevRecursion(s1, s2, len1, len2 - 1) + 1,
-			   LevRecursion(s1, s2, len1 - 1, len2 - 1) + const,
-			   LevRecursion(s1, s2, len1 - 1, len2) + 1)
+			   	   LevRecursion(s1, s2, len1 - 1, len2 - 1) + const,
+			   		 LevRecursion(s1, s2, len1 - 1, len2) + 1)
+			   
+def LevRecursion(s1, s2):
+	return LevRecursion_process(s1, s2, len(s1), len(s2))
 \end{lstlisting}
 
 \begin{lstlisting}[label=some-code, caption = Расстояние Левенштейна - алгоритм с рекурсией и матрицей]
@@ -278,28 +281,209 @@ def LevMatrixRecursion_process(matrix, i, j, s1, s2):
 	if i + 1 < len(matrix) and matrix[i + 1][j] > matrix[i][j] + 1:
 		matrix[i + 1][j] = matrix[i][j] + 1
 		LevMatrixRecursion_process(matrix, i + 1, j, s1, s2)
+		
+def LevMatrixRecursion(s1, s2):
+	n = len(s1) + 1
+	m = len(s2) + 1
+	max_len = max(n, m)
+	
+	matrix = [[max_len for j in range(m)] for i in range(n)]
+	matrix[0][0] = 0
+	
+	LevMatrixRecursion_process(matrix, 0, 0, s1, s2)
+	
+	return matrix[-1][-1]
 \end{lstlisting}
 
 \begin{lstlisting}[label=some-code, caption = Расстояние Дамерау-Левенштейна]
-	def LevMatrixRecursion_process(matrix, i, j, s1, s2):
-	if i + 1 < len(matrix) and j + 1 < len(matrix[0]):
-	const = 0 if s1[i] == s2[j] else 1
-	if matrix[i + 1][j + 1] > matrix[i][j] + const:
-	matrix[i + 1][j + 1] = matrix[i][j] + const
-	LevMatrixRecursion_process(matrix, i + 1, j + 1, s1, s2)
+def DamLev(s1, s2):
+	n = len(s1) + 1
+	m = len(s2) + 1
 	
-	if j + 1 < len(matrix[0]) and matrix[i][j + 1] > matrix[i][j] + 1:
-	matrix[i][j + 1] = matrix[i][j] + 1
-	LevMatrixRecursion_process(matrix, i, j + 1, s1, s2)
+	matrix = [[0] * m for i in range(n)]
 	
-	if i + 1 < len(matrix) and matrix[i + 1][j] > matrix[i][j] + 1:
-	matrix[i + 1][j] = matrix[i][j] + 1
-	LevMatrixRecursion_process(matrix, i + 1, j, s1, s2)
+	for j in range(m):
+		matrix[0][j] = j
+	
+	for i in range(n):
+		matrix[i][0] = i
+	
+	for i in range(1, n):
+		for j in range(1, m):
+			const = 0 if (s1[i - 1] == s2[j - 1]) else 1
+			
+			matrix[i][j] = min(matrix[i][j - 1] + 1,
+												 matrix[i - 1][j] + 1,
+												 matrix[i - 1][j - 1] + const)
+			
+			if i > 1 and j > 1:
+				if s1[i - 1] == s2[j - 2] and s2[j - 1] == s1[i - 2]:
+					matrix[i][j] = min(matrix[i][j - 1] + 1,
+														 matrix[i - 1][j] + 1,
+														 matrix[i - 1][j - 1] + const,
+														 matrix[i - 2][j - 2] + 1)
+		
+	return matrix[n - 1][m - 1]
 \end{lstlisting}
 
+\section{Результаты тестов}
+\qquadПри тестировании использовалась специальная библиотека \textbf{unittest}. Заранее были написаны необходимые тесты в соответствии с заготовками, приведёнными выше. Тестирование происходит следующим образомЯ: функция возвращает расчитанное значение, и оно сравнивается с тем, которое заранее было внесено в систему, и выводится соответствующий результат.\\
 
+\textbf{Все тесты выполнены.}\\
+
+Сами тесты представлены ниже (Листинг 3.5).
+\begin{lstlisting}[label=some-code, caption = Тесты]
+import unittest
+import main
+	
+# General tests for all algorithms
+class GeneralTest(unittest.TestCase):
+	@unittest.skip("General Tests were skipped")
+	
+	def setUp(self):
+		self.function = None
+	
+	# Processing of empty strings
+	def test_empty_str(self):
+		self.assertEqual(self.function("", ""), 0)
+		self.assertEqual(self.function("", "12345"), 5)
+		self.assertEqual(self.function("98765", ""), 5)
+	
+	# Same strings
+	def test_match(self):
+		self.assertEqual(self.function("1", "1"), 0)
+		self.assertEqual(self.function("12qw", "12qw"), 0)
+		self.assertEqual(self.function("AbC", "AbC"), 0)
+		self.assertEqual(self.function("Abc", "abc"), 1)
+	
+	# Simple tests
+	def test_easy(self):
+		self.assertEqual(self.function("1", "2"), 1)
+		self.assertEqual(self.function("123", "1"), 2)
+		self.assertEqual(self.function("1", "123"), 2)
+		self.assertEqual(self.function("a", "ab"), 1)
+		self.assertEqual(self.function("ab", "a"), 1)
+		self.assertEqual(self.function("a5c", "abc"), 1)
+	
+# Tests for Levenshtein distance search algorithm
+class LevTest(GeneralTest):
+	def test_lev(self):
+		self.assertEqual(self.function("1234", "51437"), 3)
+		self.assertEqual(self.function("012343563", "7891234356a"), 4)
+		self.assertEqual(self.function("01213425", "671213425"), 2)
+		self.assertEqual(self.function("abccde", "cdeabc"), 6)
+	
+# Tests for Damerau-Levenshtein distance search algorithm
+class DemLevTest(GeneralTest):
+	def setUp(self):
+		self.function = main.DamLev
+	
+	# Transposition tests
+	def test_demlev(self):
+		self.assertEqual(self.function("qw", "wq"), 1)
+		self.assertEqual(self.function("132", "123"), 1)
+		self.assertEqual(self.function("1001", "0110"), 2)
+		self.assertEqual(self.function("2143", "1234"), 2)
+	
+# All Levenshtein distance search algorithms are tested by not only general tests, but also by special ones for them - LevTest
+	
+# Levenshtein distance search algorithm (matrix)
+class LevMatrixTest(LevTest):
+	def setUp(self):
+		self.function = main.LevMatrix
+	
+# Levenshtein distance search algorithm (recurtion)
+class LevRecursionTest(LevTest):
+	def setUp(self):
+		self.function = main.LevRecursion
+
+# Levenshtein distance search algorithm (matrix + recurtion)
+class LevMatrixRecursionTest(LevTest):
+	def setUp(self):
+		self.function = main.LevMatrixRecursion
+	
+	
+# Start testing
+if __name__ == "__main__":
+	unittest.main()
+\end{lstlisting}
+
+\section{Оценка памяти}
+\qquadРассчитаем память, максимально затрачиваемую каждым алгоритмом при обработке строк s1 и s2. Для упрощения вычислений примем длины строк равными n.\\
+
+\underline{Расстояние Левенштейна (матрица)}\\
+
+Память в этом алгоритме затрачивается на хранение самой матрицы и двух строк.\\
+
+$M_{matrix} = (n + 1)*(n + 1)*sizeof(int) = (n + 1)^2 * 16 байт$
+
+$M_{strings} = 2*n*sizeof(char) = 2*n байт$
+
+$M = (n + 1)^2 * 16 + 2*n = 16 * n^2 + 34 * n + 16 байт$\\
+
+\underline{Расстояние Левенштейна (рекурсивный расчёт)}\\
+
+Так как это рекурсивный расчёт, то память используется при каждом вызове функции. Функция принимает на вход 2 строки (по значению) и 2 значения, которые являются размерами строк. Максимальная глубина рекурсии n + n. \\
+
+$M = (n + n) * (2 * n * sizeof(char) + 2 * sizeof(int)) = 2 * n * (2 * n + 2 * 16) = 2 * n * (2 * n + 32) = 4 * n^2 + 64 * n байт$\\
+\\
+
+\underline{Расстояние Левенштейна (матрица + рекурсия)}\\
+
+Память в этом алгоритме затрачивается для хранения матрицы и при каждом вызове функции. И максимальная глубина рекурсии n + n.\\
+
+$M_{matrix} = (n + 1)*(n + 1)*sizeof(int) = (n + 1)^2 * 16 байт$\\
+
+$M_{recursion} = (n + n) * (2 * n * sizeof(char) + 2 * sizeof(int)) = 2 * n * (2 * n + 2 * 16) = 2 * n * (2 * n + 32) = 4 * n^2 + 64 * n байт$\\
+
+$M = 16 * n^2 + 32 * n + 16 + 4 * n^2 + 64 * n = 20 * n^2 + 96 * n + 16$\\
+\\
+
+\underline{Расстояние Дамерау-Левенштейна (матрица)}\\
+
+Затраты на память такие же, как в матричном методе поиска расстояния Левенштейна.\\
+
+$M = (n + 1)^2 * 16 + 2*n = 16 * n^2 + 34 * n + 16 байт$\\
+
+\newpage\section{Среда и инструменты для замера времени}
+\qquadЗамер процессорного времени осуществлялся с помощью специальной библиотеки \textbf{time}. Осуществление замеров указано ниже (Листинг 3.6). \\
+
+При замерах пользователь указывает длину строк (для того, чтобы проще было составить далее сравнительную таблицу, длины строк примем одинаковыми). Далее программно генерируются строки, которые далее будет анализироваться.\\
+
+\begin{lstlisting}[label=some-code, caption = Замеры процессорного времени]
+# Generating a random line
+def RandomString(number):
+	letters = string.ascii_lowercase
+	return ''.join(random.choice(letters) for i in range(number))
+
+def MeasureTime(length):
+	s1 = RandomString(length)
+	s2 = RandomString(length)
+	
+	print(">>> Generated string 1: ", s1)
+	print(">>> Generated string 2: ", s2)
+	
+	print("\n---Levenshtein distance (matrix)---")
+	TestTime(LevMatrix, s1, s2)
+	
+	print("---Levenshtein distance (recurtion)---")
+	TestTime(LevRecursion, s1, s2)
+	
+	print("---Levenshtein distance (matrix + recurtion)---")
+	TestTime(LevMatrixRecursion, s1, s2)
+	
+	print("---Damerau-Levenshtein distance (matrix)---")
+	TestTime(DamLev, s1, s2)
+	
+\end{lstlisting}
 
 \chapter{Исследовательская часть}
+Как было упомянуто выше, для облегчения проведения анализа принимается, что длины обрабатываемых строк равны. $len1 = len2 \in \left\lbrace 1, 3, 6, 10, 15, 20, 40, 70, 100, 1000\right\rbrace$. Содержимое строк генерируется случайным образом. \\
+\\
+Каждый замер проводится 5 раз для получения более точного среднего результата.
+
+
+
 \chapter*{Заключение}
 \addcontentsline{toc}{chapter}{Заключение}
 

@@ -4,13 +4,15 @@
 \contentsline {chapter}{\numberline {2}Конструкторская часть}{6}%
 \contentsline {section}{\numberline {2.1}Расстояние Левенштейна, матричный алгоритм}{6}%
 \contentsline {section}{\numberline {2.2}Расстояние Левенштейна, рекурсивный алгоритм}{6}%
-\contentsline {section}{\numberline {2.3}Расстояние Левенштейна, использующий рекурсию и матрицу}{7}%
+\contentsline {section}{\numberline {2.3}Расстояние Левенштейна, рекурсивный метод с заполнением матрицы}{7}%
 \contentsline {section}{\numberline {2.4}Расстояние Дамерау-Левенштейна}{7}%
 \contentsline {section}{\numberline {2.5}Требования к ПО}{8}%
 \contentsline {section}{\numberline {2.6}Заготовки тестов}{8}%
 \contentsline {chapter}{\numberline {3}Технологическая часть}{13}%
 \contentsline {section}{\numberline {3.1}Выбранный язык программирования}{13}%
-\contentsline {section}{\numberline {3.2}Инструменты замеров}{13}%
-\contentsline {section}{\numberline {3.3}Листинг}{13}%
-\contentsline {chapter}{\numberline {4}Исследовательская часть}{15}%
-\contentsline {chapter}{Заключение}{16}%
+\contentsline {section}{\numberline {3.2}Листинг кода}{13}%
+\contentsline {section}{\numberline {3.3}Результаты тестов}{15}%
+\contentsline {section}{\numberline {3.4}Оценка памяти}{17}%
+\contentsline {section}{\numberline {3.5}Среда и инструменты для замера времени}{19}%
+\contentsline {chapter}{\numberline {4}Исследовательская часть}{20}%
+\contentsline {chapter}{Заключение}{21}%
