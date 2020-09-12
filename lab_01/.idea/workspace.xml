@@ -28,7 +28,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python tests.Unittests in tests.py">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="lab_01" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -50,9 +50,69 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Unittests for tests.LevMatrixRecursionTest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="lab_01" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.LevMatrixRecursionTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for tests.LevMatrixTest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="lab_01" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.LevMatrixTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for tests.LevRecursionTest" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="lab_01" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.LevRecursionTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in tests.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="lab_01" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Unittests in tests.py" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.Unittests for tests.LevMatrixRecursionTest" />
+        <item itemvalue="Python tests.Unittests for tests.LevRecursionTest" />
+        <item itemvalue="Python tests.Unittests for tests.LevMatrixTest" />
       </list>
     </recent_temporary>
   </component>
@@ -70,22 +130,22 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="272" key="GridCell.Tab.0.bottom" timestamp="1599594198369">
+    <state width="936" height="376" key="GridCell.Tab.0.bottom" timestamp="1599859866927">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="272" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599594198369" />
-    <state width="1899" height="272" key="GridCell.Tab.0.center" timestamp="1599594198369">
+    <state width="936" height="376" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599859866927" />
+    <state width="936" height="376" key="GridCell.Tab.0.center" timestamp="1599859866927">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="272" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599594198369" />
-    <state width="1899" height="272" key="GridCell.Tab.0.left" timestamp="1599594198369">
+    <state width="936" height="376" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599859866927" />
+    <state width="936" height="376" key="GridCell.Tab.0.left" timestamp="1599859866927">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="272" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599594198369" />
-    <state width="1899" height="272" key="GridCell.Tab.0.right" timestamp="1599594198369">
+    <state width="936" height="376" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599859866927" />
+    <state width="936" height="376" key="GridCell.Tab.0.right" timestamp="1599859866927">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="272" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599594198369" />
+    <state width="936" height="376" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599859866927" />
     <state x="463" y="166" key="SettingsEditor" timestamp="1599418487264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
