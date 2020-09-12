@@ -15,7 +15,6 @@ def print_matrix(matr):
 def LevMatrix(s1, s2):
     n = len(s1) + 1
     m = len(s2) + 1
-
     matrix = [[i + j for j in range(m)] for i in range(n)]
 
     for i in range(1, n):
@@ -28,14 +27,17 @@ def LevMatrix(s1, s2):
 
     return matrix[n - 1][m - 1]
 
-def LevRecursion(s1, s2):
-    if s1 == '' or s2 == '':
-        return abs(len(s1) - len(s2))
+def LevRecursion_process(s1, s2, len1, len2):
+    if len1 == 0 or len2 == 0:
+        return abs(len1 - len2)
 
-    const = 0 if (s1[-1] == s2[-1]) else 1
-    return min(LevRecursion(s1[:-1], s2) + 1,
-               LevRecursion(s1[:-1], s2[:-1]) + const,
-               LevRecursion(s1, s2[:-1]) + 1)
+    const = 0 if (s1[len1 - 1] == s2[len2 - 1]) else 1
+    return min(LevRecursion_process(s1, s2, len1, len2 - 1) + 1,
+               LevRecursion_process(s1, s2, len1 - 1, len2 - 1) + const,
+               LevRecursion_process(s1, s2, len1 - 1, len2) + 1)
+
+def LevRecursion(s1, s2):
+    return LevRecursion_process(s1, s2, len(s1), len(s2))
 
 def LevMatrixRecursion_process(matrix, i, j, s1, s2):
     if i + 1 < len(matrix) and j + 1 < len(matrix[0]):
@@ -64,16 +66,21 @@ def LevMatrixRecursion(s1, s2):
 
     return matrix[-1][-1]
 
-def DanLev(s1, s2):
+def DamLev(s1, s2):
     n = len(s1) + 1
     m = len(s2) + 1
 
-    matrix = [[i + j for j in range(m)] for i in range(n)]
+    matrix = [[0] * m for i in range(n)]
+
+    for j in range(m):
+        matrix[0][j] = j
+
+    for i in range(n):
+        matrix[i][0] = i
 
     for i in range(1, n):
         for j in range(1, m):
-            if (s1[i - 1] == s2[j - 1]):    const = 0
-            else:                           const = 1
+            const = 0 if (s1[i - 1] == s2[j - 1]) else 1
 
             matrix[i][j] = min(matrix[i][j - 1] + 1,
                                matrix[i - 1][j] + 1,
@@ -84,7 +91,7 @@ def DanLev(s1, s2):
                     matrix[i][j] = min(matrix[i][j - 1] + 1,
                                        matrix[i - 1][j] + 1,
                                        matrix[i - 1][j - 1] + const,
-                                       matrix[i][j] + 1)
+                                       matrix[i - 2][j - 2] + 1)
 
     return matrix[n - 1][m - 1]
 
@@ -107,7 +114,7 @@ def TestTime(function, s1, s2):
     print()
 
 def MeasureTime():
-    length = [4, 6, 8, 10, 15, 20]
+    length = [4, 6, 8, 10, 12, 14]
 
     for i in range(len(length)):
         print("\n--------------------------------------------------------------------------------")
@@ -127,7 +134,7 @@ def MeasureTime():
         print("---Расстояние Левенштейна (матрица + рекурсия)---")
         TestTime(LevMatrixRecursion, s1, s2)
         print("---Расстояние Дамерау-Левенштейна (матрица)---")
-        TestTime(DanLev, s1, s2)
+        TestTime(DamLev, s1, s2)
 
 
 def main():
@@ -150,7 +157,7 @@ def main():
         elif choice == "3":
             print("\nМинимальное расстояние: ", LevMatrixRecursion(str1, str2))
         elif choice == "4":
-            print("\nМинимальное расстояние: ", DanLev(str1, str2))
+            print("\nМинимальное расстояние: ", DamLev(str1, str2))
         elif choice == "5":
             MeasureTime()
 
