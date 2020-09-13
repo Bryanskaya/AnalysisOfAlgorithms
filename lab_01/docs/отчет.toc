@@ -16,3 +16,4 @@
 \contentsline {section}{\numberline {3.5}Среда и инструменты для замера времени}{19}%
 \contentsline {chapter}{\numberline {4}Исследовательская часть}{20}%
 \contentsline {chapter}{Заключение}{21}%
+\contentsline {chapter}{Список литературы}{22}%
