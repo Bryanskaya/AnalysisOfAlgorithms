@@ -129,14 +129,14 @@ def MeasureTime(length):
         print(">>> Сгенерированная строка 1: ", s1)
         print(">>> Сгенерированная строка 2: ", s2)
 
-        print("\n---Расстояние Левенштейна (матрица)---")
-        TestTime(LevMatrix, s1, s2)
+        '''print("\n---Расстояние Левенштейна (матрица)---")
+        TestTime(LevMatrix, s1, s2)'''
         print("---Расстояние Левенштейна (рекурсия)---")
         TestTime(LevRecursion, s1, s2)
-        print("---Расстояние Левенштейна (матрица + рекурсия)---")
+        '''print("---Расстояние Левенштейна (матрица + рекурсия)---")
         TestTime(LevMatrixRecursion, s1, s2)
         print("---Расстояние Дамерау-Левенштейна (матрица)---")
-        TestTime(DamLev, s1, s2)
+        TestTime(DamLev, s1, s2)'''
 
 
 def main():
