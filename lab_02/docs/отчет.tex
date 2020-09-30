@@ -23,6 +23,29 @@
 % Возможность вставки pdf страниц
 \usepackage{pdfpages}
 
+% Листинги
+\usepackage{listings}
+
+\lstset{
+	language = c++,
+	extendedchars=\true,
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	tabsize=2,
+	captionpos=t,
+	breaklines=true,
+	breakatwhitespace=false,
+	escapeinside={\#*}{*)},
+	keepspaces=true
+}
+
 
 \begin{document}
 	\renewcommand\bibname{Список литературы}
