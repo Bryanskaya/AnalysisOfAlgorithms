@@ -2,10 +2,10 @@
 
 #pragma optimize("", off)
 
-matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
+matrix_t winograd_opt_mult(matrix_t a, matrix_t b, int m, int n, int q)
 {
 	arr_t mulH = create_array(m);
-	arr_t mulV = create_array(n);
+	arr_t mulV = create_array(q);
 	double buf;
 	
 	matrix_t c = create_matrix(m, q);
@@ -39,21 +39,18 @@ matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
 			if (n % 2)
 				c[i][j] += a[i][temp] * b[temp][j];
 		}
+
+
+	free_array(&mulH);
+	free_array(&mulV);
 	
 	return c;
 }
 
-#pragma optimize("", on)
-
-/*
-#include "winograd_mult.h"
-
-#pragma optimize("", off)
-
 matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
 {
 	arr_t mulH = create_array(m);
-	arr_t mulV = create_array(n);
+	arr_t mulV = create_array(q);
 	matrix_t c = create_matrix(m, q);
 
 	for (int i = 0; i < m; i++)
@@ -87,4 +84,3 @@ matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
 }
 
 #pragma optimize("", on)
-*/
