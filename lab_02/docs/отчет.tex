@@ -46,6 +46,11 @@
 	keepspaces=true
 }
 
+% Чтобы вместо : в подписях было -
+\RequirePackage{caption}
+\DeclareCaptionLabelSeparator{defffis}{ — }
+\captionsetup{justification=centering,labelsep=defffis}
+
 
 \begin{document}
 	\renewcommand\bibname{Список литературы}
@@ -72,9 +77,8 @@
 	\input{technological_part.tex}
 	\newpage
 	
-	\chapter*{Исследовательская часть}
-	\addcontentsline{toc}{chapter}{Исследовательская часть}
-	%\input{research_part.tex}
+	\chapter{Исследовательская часть}
+	\input{research_part.tex}
 	\newpage
 	
 	\chapter*{Заключение}
