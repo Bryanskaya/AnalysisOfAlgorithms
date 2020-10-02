@@ -140,6 +140,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lab_02.cpp" />
+    <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="standart_mult.cpp" />
+    <ClCompile Include="tests.cpp" />
+    <ClCompile Include="winograd_mult.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="standart_mult.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="tests.h" />
+    <ClInclude Include="winograd_mult.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
