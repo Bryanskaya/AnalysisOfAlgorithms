@@ -17,6 +17,17 @@ void fill_matrix(matrix_t matr, int n, int m)
 			cin >> matr[i][j];
 }
 
+matrix_t random_fill_matrix(int m, int n)
+{
+	matrix_t matr = create_matrix(m, n);
+
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			matr[i][j] = rand() % 20 - 10;
+
+	return matr;
+}
+
 bool cmp_matrix(matrix_t matr1, matrix_t matr2, int m, int q)
 {
 	for (int i = 0; i < m; i++)
@@ -52,5 +63,6 @@ arr_t create_array(int n)
 
 void free_array(arr_t* arr)
 {
-	delete arr;
+	delete *arr;
+	*arr = nullptr;
 }
