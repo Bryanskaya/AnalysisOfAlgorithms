@@ -92,8 +92,10 @@ int main()
         return -1;
     }
 
-    vector<int> n1{ 50, 100, 200, 300, 400, 500 };
-    vector<int> n2{ 51, 101, 201, 301, 401, 501 };
+    //vector<int> n1{ 50, 100, 200, 300, 400, 500 };
+    //vector<int> n2{ 51, 101, 201, 301, 401, 501 };
+    vector<int> n1{600, 700};
+    vector<int> n2{601, 701};
     test_range(n1);
     test_range(n2);
 
