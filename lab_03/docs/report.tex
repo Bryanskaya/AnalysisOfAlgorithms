@@ -1,0 +1,100 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{setspace} % для междустрочного интервала
+\onehalfspacing % 1.5 интервал между строками
+
+\usepackage[left=30mm, top=20mm, right=20mm, bottom=20mm, nohead, footskip=7mm]{geometry}
+
+\usepackage{titlesec, blindtext, color} 
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter{. }}{0pt}{\Large\bfseries}
+\titlespacing{\chapter}{-5pt}{-30pt}{12pt} % отступ заголовка сверху
+\titleformat{\section}[hang]{\large\bfseries}{\thesection{. }}{0pt}{\large\bfseries}
+
+\makeatletter % список литературы
+\def\@biblabel#1{#1. }
+\makeatother
+
+% Ссылки
+\usepackage{hyperref}
+
+% Возможность вставки pdf страниц
+\usepackage{pdfpages}
+
+% Листинги
+\usepackage{listings}
+
+\lstset{
+	language = c++,
+	extendedchars=\true,
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	tabsize=2,
+	captionpos=t,
+	breaklines=true,
+	breakatwhitespace=false,
+	escapeinside={\#*}{*)},
+	keepspaces=true
+}
+
+% Чтобы вместо : в подписях было -
+\RequirePackage{caption}
+\DeclareCaptionLabelSeparator{defffis}{ — }
+\captionsetup{justification=centering,labelsep=defffis}
+
+
+\begin{document}
+	\renewcommand\bibname{Список литературы}
+	
+	\includepdf[pages=1]{title.pdf}
+	
+	\tableofcontents
+	\newpage
+	
+	\chapter*{Введение}
+	\addcontentsline{toc}{chapter}{Введение}
+	\input{introduction.tex}
+	\newpage
+	
+	\chapter{Аналитическая часть}
+	\input{analytical_part.tex}
+	\newpage
+	
+	\chapter{Конструкторская часть}
+	\input{construction_part.tex}
+	\newpage
+	
+	\chapter{Технологическая часть}
+	%\input{technological_part.tex}
+	\newpage
+	
+	\chapter{Исследовательская часть}
+	%\input{research_part.tex}
+	\newpage
+	
+	\chapter*{Заключение}
+	\addcontentsline{toc}{chapter}{Заключение}
+	%\input{conclusion.tex}
+	\newpage
+	
+	\begin{thebibliography}{2}
+		\addcontentsline{toc}{chapter}{Список литературы}
+		\bibitem{labor_int} Трудоёмкость алгоритмов и временные оценки [Электронный ресурс]. Режим доступа: http://techn.sstu.ru/kafedri/подразделения/1/MetMat/shaturn/theoralg/5.htm, свободный (дата обращения: 29.09.20).
+		\bibitem{Kormen} Кормен, Томас Х. и др Алгоритмы: построение и анализ, 3-е изд. : Пер. с англ. - М. : ООО "И.Д. Вильямс", 2018. - 1328 с. : ил. - Парал. тит. англ. -  ISBN 978-5-8459-2016-4 (рус.).
+		\bibitem{Query} QueryPerformanceCounter function [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter, свободный (дата обращения: 01.10.2020).
+	\end{thebibliography}
+\end{document}
+
+	\end{thebibliography}
+	
+	
+\end{document}
