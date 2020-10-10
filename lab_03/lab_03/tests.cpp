@@ -25,6 +25,7 @@ bool sort_cmp(array_t a, int n)
 	return res;
 }
 
+// Размер массива равен 1
 void test_size_1()
 {
 	int n = 1;
@@ -46,6 +47,7 @@ void test_size_1()
 	cout << endl << __FUNCTION__ << " OK" << endl;
 }
 
+// Произвольные массивы различный длин
 void test_std()
 {
 	int n[] = { 3, 5, 8, 10, 12 };
@@ -67,6 +69,7 @@ void test_std()
 	cout << endl << __FUNCTION__ << " OK" << endl;
 }
 
+// Уже отсортированные по неубыванию массивы
 void test_sorted()
 {
 	int n = 30;
@@ -87,6 +90,7 @@ void test_sorted()
 	cout << endl << __FUNCTION__ << " OK" << endl;
 }
 
+// Уже отсортированные по невозрастанию массивы
 void test_reverse_sorted()
 {
 	int n = 30;
@@ -108,6 +112,7 @@ void test_reverse_sorted()
 	cout << endl << __FUNCTION__ << " OK" << endl;
 }
 
+// Массив одинаковых элементов
 void test_same_elements()
 {
 	int n = 30;
