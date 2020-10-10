@@ -8,7 +8,7 @@
 
 using namespace std;
 
-typedef double* array_t;
+typedef int* array_t;
 
 array_t create_array(int n);
 array_t copy_array(array_t arr, int n);

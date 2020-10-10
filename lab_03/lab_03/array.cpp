@@ -2,7 +2,7 @@
 
 array_t create_array(int n)
 {
-	return new double[n];
+	return new int[n];
 }
 
 array_t copy_array(array_t arr, int n)
