@@ -4,12 +4,12 @@
 bool sort_cmp(array_t a, int n)
 {
 	bool res = true;
-	void(*func_arr[])(array_t&, int) = { bubble_sort };
+	void(*func_arr[])(array_t&, int) = { bubble_sort, insert_sort, lsd_sort };
 
 	array_t c = copy_array(a, n);
 	sort(c, c + n);
 
-	for (int i = 0; i < 1 && res; i++)
+	for (int i = 0; i < 3 && res; i++)
 	{
 		array_t temp_arr = copy_array(a, n);
 
