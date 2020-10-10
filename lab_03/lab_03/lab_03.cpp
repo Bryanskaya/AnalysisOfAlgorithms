@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 
 #include "bubble_sort.h"
+#include "insert_sort.h"
+#include "lsd_sort.h"
 #include "tests.h"
 
 
@@ -44,7 +46,7 @@ int main()
     case 1:
         cout << endl << "1 - Сортировка пузырьком" << endl;
         cout << "2 - Сортировка вставками" << endl;
-        cout << "3 - *****" << endl;
+        cout << "3 - Поразрядная сортировка" << endl;
         cout << "Ваш выбор: ";
         cin >> cmd;
         switch (cmd)
@@ -53,10 +55,10 @@ int main()
             sort(bubble_sort);
             break;
         case 2:
-            //sort(insert_sort);
+            sort(insert_sort);
             break;
         case 3:
-            //
+            sort(lsd_sort);
             break;
         default:
             cout << "Некорректный ввод" << endl;
@@ -73,4 +75,3 @@ int main()
 
     return 0;
 }
-

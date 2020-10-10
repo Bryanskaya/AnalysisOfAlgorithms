@@ -141,12 +141,16 @@
   <ItemGroup>
     <ClCompile Include="array.cpp" />
     <ClCompile Include="bubble_sort.cpp" />
+    <ClCompile Include="insert_sort.cpp" />
     <ClCompile Include="lab_03.cpp" />
+    <ClCompile Include="lsd_sort.cpp" />
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.h" />
     <ClInclude Include="bubble_sort.h" />
+    <ClInclude Include="insert_sort.h" />
+    <ClInclude Include="lsd_sort.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
