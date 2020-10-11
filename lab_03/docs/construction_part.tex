@@ -7,13 +7,13 @@
 Действия повторяются до тех пор, пока не обработается вся неотсортированная часть. \\
 
 \textbf{Схема} алгоритма представлена на Рис.\ref{fig1:image}.
-%\begin{figure}[h]
-%	\begin{center}
-%		{\includegraphics[scale = 0.46]{schemes/bubble}}
-%		\caption{Сортировка пузырьком}
-%		\label{fig1:image}
-%	\end{center}
-%\end{figure}
+\begin{figure}[h]
+	\begin{center}
+		{\includegraphics[scale = 0.519]{schemes/bubble}}
+		\caption{Сортировка пузырьком}
+		\label{fig1:image}
+	\end{center}
+\end{figure}
 
 \section{Сортировка вставками}
 \qquadВ этом алгоритме рассматриваемый массив условно делится на две части: отсортированная и нет. 
@@ -23,13 +23,13 @@
 И так до тех пор, пока не просмотрится вся неотсортированная часть.\\ 
 
 \textbf{Схема} алгоритма представлена на Рис.\ref{fig2:image}.
-%\begin{figure}[h]
-%	\begin{center}
-%		{\includegraphics[scale = 0.46]{schemes/insert}}
-%		\caption{Сортировка вставками}
-%		\label{fig2:image}
-%	\end{center}
-%\end{figure}
+\begin{figure}[h]
+	\begin{center}
+		{\includegraphics[scale = 0.57]{schemes/insert}}
+		\caption{Сортировка вставками}
+		\label{fig2:image}
+	\end{center}
+\end{figure}
 
 \section{Поразрядная сортировка}
 \qquadПроизводится сортировка массива целых положительных чисел, а также чисел, которые можно преобразовать в неотрицательные, путём увеличения всех элементов на величину, по модулю равную минимальному элементу.\\
@@ -38,14 +38,23 @@
 
 Далее сравнение производится поразрядно: сначала рассматриваются значения одного крайнего разряда, и формируются группы элементов по результатам этого сравнения, затем сравниваются значения следующего соседнего разряда, и происходит переупорядочивание элементов по результатам текущего сравнения (с сохранением относительного порядка, который был достигнут ранее). Сравнения продолжаются до тех пор, пока не обработается $k$ый разряд.\\
 
-\textbf{Схема} алгоритма представлена на Рис.\ref{fig3:image}.
-%\begin{figure}[h]
-%	\begin{center}
-%		{\includegraphics[scale = 0.46]{schemes/lsd}}
-%		\caption{Сортировка вставками}
-%		\label{fig3:image}
-%	\end{center}
-%\end{figure}
+\textbf{Схема} алгоритма представлена на Рис.\ref{fig3:image} и \ref{fig4:image}.
+\begin{figure}[h]
+	\begin{center}
+		{\includegraphics[scale = 0.57]{schemes/lsd_1}}
+		\caption{Поразрядная сортировка}
+		\label{fig3:image}
+	\end{center}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+		{\includegraphics[scale = 0.53]{schemes/lsd_2}}
+		\caption{Поразрядная сортировка (продолжение)}
+		\label{fig4:image}
+	\end{center}
+\end{figure}
+
 
 \section{Требования к ПО}
 \qquadДля корректной работы алгоритмов и проведения тестов необходимо выполнить следующее.

@@ -6,16 +6,16 @@
 \contentsline {section}{\numberline {1.3}Поразрядная сортировка}{5}{section.1.3}%
 \contentsline {chapter}{\numberline {2}Конструкторская часть}{6}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Сортировка пузырьком}{6}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Сортировка вставками}{6}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Поразрядная сортировка}{6}{section.2.3}%
+\contentsline {section}{\numberline {2.2}Сортировка вставками}{7}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Поразрядная сортировка}{7}{section.2.3}%
 \contentsline {section}{\numberline {2.4}Требования к ПО}{7}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Заготовки тестов}{7}{section.2.5}%
-\contentsline {chapter}{\numberline {3}Технологическая часть}{8}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Выбранный язык программирования}{8}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Листинг кода}{8}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Результаты тестов}{12}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Оценка трудоёмкости}{15}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Оценка времени}{16}{section.3.5}%
-\contentsline {chapter}{\numberline {4}Исследовательская часть}{17}{chapter.4}%
-\contentsline {chapter}{Заключение}{18}{chapter*.3}%
-\contentsline {chapter}{Список литературы}{19}{chapter*.4}%
+\contentsline {section}{\numberline {2.5}Заготовки тестов}{8}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Технологическая часть}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Выбранный язык программирования}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Листинг кода}{12}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Результаты тестов}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Оценка трудоёмкости}{20}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Оценка времени}{20}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Исследовательская часть}{21}{chapter.4}%
+\contentsline {chapter}{Заключение}{22}{chapter*.7}%
+\contentsline {chapter}{Список литературы}{23}{chapter*.8}%
