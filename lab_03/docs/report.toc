@@ -15,7 +15,12 @@
 \contentsline {section}{\numberline {3.2}Листинг кода}{12}{section.3.2}%
 \contentsline {section}{\numberline {3.3}Результаты тестов}{16}{section.3.3}%
 \contentsline {section}{\numberline {3.4}Оценка трудоёмкости}{20}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Оценка времени}{20}{section.3.5}%
-\contentsline {chapter}{\numberline {4}Исследовательская часть}{21}{chapter.4}%
-\contentsline {chapter}{Заключение}{22}{chapter*.7}%
-\contentsline {chapter}{Список литературы}{23}{chapter*.8}%
+\contentsline {subsection}{\numberline {3.4.1}Сортировка пузырьком}{20}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Сортировка вставками}{20}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Поразрядная сортировка}{20}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}Оценка времени}{21}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Исследовательская часть}{24}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Характеристики ПО}{24}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Измерения}{24}{section.4.2}%
+\contentsline {chapter}{Заключение}{26}{chapter*.9}%
+\contentsline {chapter}{Список литературы}{27}{chapter*.10}%
