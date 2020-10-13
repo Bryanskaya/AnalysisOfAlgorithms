@@ -1,6 +1,10 @@
 #include "tests.h"
 
 
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+
 bool sort_cmp(array_t a, int n)
 {
 	bool res = true;
@@ -140,4 +144,44 @@ void run_tests()
 	test_sorted();
 	test_reverse_sorted();
 	test_same_elements();
+}
+
+void start_measuring()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
+
+	PCFreq = double(li.QuadPart) / 1000;
+
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double get_measured()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+
+
+void test_time(void(*f)(array_t&, int), int n)
+{
+	array_t a = random_fill_array(n);
+
+	int num = 0;
+	start_measuring();
+
+	while (get_measured() < 3 * 1000)
+	{
+		f(a, n);
+		num++;
+	}
+
+	double t = get_measured() / 1000;
+	cout << "Выполнено " << num << " операций за " << t << " секунд" << endl;
+	cout << "Время: " << t / num << endl;
+
+	free_array(&a);
 }
