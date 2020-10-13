@@ -4,7 +4,7 @@
 
 void insert_sort(array_t& arr, int n)
 {
-	double temp;
+	int temp;
 	int k;
 
 	for (int i = 1; i < n; i++)

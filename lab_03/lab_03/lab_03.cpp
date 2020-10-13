@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <vector>
 
 #include "bubble_sort.h"
 #include "insert_sort.h"
@@ -30,9 +31,29 @@ void sort(void(*f)(array_t&, int))
     free_array(&arr);
 }
 
+void test_range(vector<int>& n)
+{
+    for (int key : n)
+    {
+        cout << endl << endl << "Размер тестируемого массива: " << key << endl;
+
+        cout << endl << "-----Сортировка пузырьком-----" << endl;
+        test_time(bubble_sort, key);
+        cout << endl << "-----Сортировка вставками-----" << endl;
+        test_time(insert_sort, key);
+        cout << endl << "-----Поразрядная сортировка-----" << endl;
+        test_time(lsd_sort, key);
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
+
+    //vector<int> n{ 10, 50, 100, 500, 1000, 3000, 7000, 10000, 50000, 100000 };
+    //vector<int> n{ 200, 300, 400 };
+
+    //test_range(n);
   
     cout << "1 - Сортировка массива" << endl;
     cout << "2 - Тестирование алгоритмов" << endl;
