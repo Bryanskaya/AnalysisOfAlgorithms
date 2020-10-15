@@ -1,11 +1,13 @@
+В данном разделе будет проведена оценка трудоёмкости алгоритмов сортировки и проведены тесты, направленные на проверку корректности работы.
+
 \section{Выбранный язык программирования}
 \qquadДля выполнения этой лабораторной работы был выбран язык программирования C++, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения тестирования и замеров. Тестирование реализованных функций производилось путём сравнения полученного результата с результатом обработки массива методом из стандартной библиотеки algorithm \cite{algorithm}.
 
 Использованная среда разработки - Visual Studio \cite{Visual}.
 
 \section{Листинг кода}
-\qquadНиже представлены Листиги 3.1 - 3.3 функций, реализующих сортировки массива.
-\begin{lstlisting}[label=code, caption = Сортировка пузырьком]
+\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих сортировки массива.
+\begin{lstlisting}[label=code1, caption = Сортировка пузырьком]
 #pragma optimize("", off)
 
 void bubble_sort(array_t& arr, int n)
@@ -26,7 +28,7 @@ void bubble_sort(array_t& arr, int n)
 #pragma optimize("", on)
 \end{lstlisting}
 
-\begin{lstlisting}[label=code, caption = Сортировка вставками]
+\begin{lstlisting}[label=code2, caption = Сортировка вставками]
 #pragma optimize("", off)
 
 void insert_sort(array_t& arr, int n)
@@ -51,7 +53,7 @@ void insert_sort(array_t& arr, int n)
 #pragma optimize("", on)
 \end{lstlisting}
 
-\begin{lstlisting}[label=code, caption = Поразрядная сортировка]
+\begin{lstlisting}[label=code3, caption = Поразрядная сортировка]
 #pragma optimize("", off)
 
 int* create_digit(int n)
@@ -162,9 +164,9 @@ void lsd_sort(array_t& arr, int n)
 \section{Результаты тестов}
 \qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.\\
 
-\textbf{Все тесты пройдены успешно.} Сами тесты представлены ниже (Листинг 3.4).\\
+\textbf{Все тесты пройдены успешно.} Сами тесты представлены ниже (Листинг \ref{code_test}).\\
 
-\begin{lstlisting}[label=code, caption = Тесты]
+\begin{lstlisting}[label=code_test, caption = Тесты]
 bool sort_cmp(array_t a, int n)
 {
 	bool res = true;
@@ -258,7 +260,6 @@ void test_sorted()
 void test_reverse_sorted()
 {
 	int n = 30;
-	
 	array_t a = random_fill_array(n);
 	
 	sort(a, a + n);
@@ -314,17 +315,17 @@ void run_tests()
 $f_{bubble} = 2 + 2 + N(2 + 3 + \frac{N - 1}{2}(3 + 4 + $$\left[\begin{array}{ll}
 	0, & $л.с.$\\
 	2 + 4 + 3, & $х.с.$
-\end{array} \right.$))\\
+\end{array} \right.$));\\
 $f_{bubble} = 4 + N(5 + \frac{N - 1}{2}(7 + $$\left[\begin{array}{ll}
 	0, & $л.с.$\\
 	9, & $х.с.$
-\end{array} \right.$))\\
+\end{array} \right.$)).\\
 
 \textbf{Лучший случай} (отсортированный массив):\\
-$f_{bubble} = 4 + N(5 + 3.5(N - 1)) = 3.5N^2 + 1.5N + 4$\\
+$f_{bubble} = 4 + N(5 + 3.5(N - 1)) = 3.5N^2 + 1.5N + 4$.\\
 
 \textbf{Худший случай} (отсортированный в обратном порядке массив):\\
-$f_{bubble} = 4 + N(5 + 8(N - 1)) = 8N^2 - 3N + 4$\\
+$f_{bubble} = 4 + N(5 + 8(N - 1)) = 8N^2 - 3N + 4$.\\
 
 \subsection{Сортировка вставками}
 $f_{insert} = 2 + N(2 + 2 + 1 + $$\left[\begin{array}{ll}
@@ -333,25 +334,26 @@ $f_{insert} = 2 + N(2 + 2 + 1 + $$\left[\begin{array}{ll}
 \end{array} \right. + 2 + $\\
 
 $\qquad+\left[\begin{array}{ll}
-\frac{N + 1}{2} + 6, & $обратно отсортированный массив$\\
+\frac{N + 1}{2}6, & $обратно отсортированный массив$\\
 0, & $отсортированный массив$
-\end{array} \right. + 2)$\\
+\end{array} \right. + 2)$.\\
 
-\textbf{Первый случай}:\\
-$f_{insert} = 2 + N(17 + \frac{N + 1}{2}) = 0.5N^2 + 17.5N + 2$\\
+\textbf{Лучший случай} (отсортированный массив):\\
+$f_{insert} = 2 + N(17 + \frac{N + 1}{2}) = 1.5N^2 + 12.5N + 2$.\\
 
-\textbf{Второй случай}:\\
-$f_{insert} = 2 + N(11 + \frac{N + 1}{2}3) = 1.5N^2 + 12.5N + 2$\\
+\textbf{Худший случай} (отсортированный в обратном порядке массив):\\
+$f_{insert} = 2 + N(14 + (N + 1)3) = 3N^2 + 14N + 2$.\\
+
 
 \subsection{Поразрядная сортировка}
 \qquad\textbf{Функция получения значения конкретного разряда}:\\
-$f_{digit} = 3 + 2 = 5$\\
+$f_{digit} = 3 + 2 = 5$.\\
 
 \textbf{Функция создания массива степеней 10}:\\
-$f_{create} = 2 + 2 + (R + 1)(3 + 2) = 4 + 5(R + 1) = 9 + 5R$\\
+$f_{create} = 2 + 2 + (R + 1)(3 + 2) = 4 + 5(R + 1) = 9 + 5R$.\\
 
 \textbf{Функция посчёта количества разрядов числа}:\\
-$f_{count} = 1 + 1 + R(1 + 1) = 2 + 2R$\\
+$f_{count} = 1 + 1 + R(1 + 1) = 2 + 2R$.\\
 
 \textbf{Функция, нормализующая массив}:\\
 $f_{analyze} = 2 + 1 + 2 + N(2 + 2 + 1 + $$\left[\begin{array}{ll}
@@ -363,7 +365,7 @@ $f_{analyze} = 2 + 1 + 2 + N(2 + 2 + 1 + $$\left[\begin{array}{ll}
 \end{array} \right. ) + 1 + $$\left[\begin{array}{ll}
 0, & $л.с.$\\
 1 + 1 + 2 + N(2 + 2), & $х.с.$
-\end{array} \right. + + f_{count}$\\
+\end{array} \right. + + f_{count}$;\\
 $f_{analyze} = 8 + 2R + N(6 + $$\left[\begin{array}{ll}
 	0, & $л.с.$\\
 	1, & $х.с.$
@@ -373,14 +375,14 @@ $f_{analyze} = 8 + 2R + N(6 + $$\left[\begin{array}{ll}
 \end{array} \right.) + $$\left[\begin{array}{ll}
 0, & $л.с.$\\
 4 + 4N, & $х.с.$
-\end{array} \right.$\\
+\end{array} \right.$.\\
 
 
 \textbf{Функция, реализующая алгоритм поразрядной сортировки}:\\
 $f_{lsd} = 1 + 1 + f_{analyze} + 1 + 1 + f_{create} + 2 + R(2 + 2 + 10(2 + 2) + 2 + N(2 + 3 + f_{digit}) + 1 + 2 + 10(2 + 5) + 2 + N(2 + 2 + f_{digit} + 4 + 2) + 3) + 1 + $$\left[\begin{array}{ll}
 	0, & $л.с.$\\
 	2 + N(2 + 2), & $х.с.$
-\end{array} \right.$\\
+\end{array} \right.$;\\
 $f_{lsd} = 24 + 131R + 25RN + $$\left[\begin{array}{ll}
 	0, & $л.с.$\\
 	2 + 4N, & $х.с.$
@@ -393,17 +395,17 @@ $f_{lsd} = 24 + 131R + 25RN + $$\left[\begin{array}{ll}
 \end{array} \right.) + $$\left[\begin{array}{ll}
 0, & $л.с.$\\
 4 + 4N, & $х.с.$
-\end{array} \right.$\\
+\end{array} \right.$.\\
 
 \textbf{Лучший случай} (массив состоит из неотрицательных элементов):\\
-$f_{lsd} = 24 + 131R + 25RN + 6N$\\
+$f_{lsd} = 24 + 131R + 25RN + 6N$.\\
 
 \textbf{Худший случай} (в массиве есть отрицательные элементы):\\
-$f_{lsd} = 24 + 131R + 25RN + 2 + 4N + N(6 + 1 + 1) + 4 + 4N = 30 + 131R + 25RN + 16N$\\
+$f_{lsd} = 24 + 131R + 25RN + 2 + 4N + N(6 + 1 + 1) + 4 + 4N = 30 + 131R + 25RN + 16N$.\\
 
 \section{Оценка времени}
-\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг 3.5).
-\begin{lstlisting}[label=code, caption = Замеры процессорного времени]
+\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг \ref{code_time}).
+\begin{lstlisting}[label=code_time, caption = Замеры процессорного времени]
 void test_range(vector<int>& n)
 {
 	for (int key : n)
@@ -459,3 +461,7 @@ void test_time(void(*f)(array_t&, int), int n)
 	free_array(&a);
 }
 \end{lstlisting}
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+\qquadТаким образом, рассчитана трудоёмкость алгоритмов, приведены листинги кода каждой из функций, реализующих эти алгоритмы, а также листинг тестовых функций, направленных на проверку корректности их работы.
