@@ -6,8 +6,9 @@
 Использованная среда разработки - Visual Studio \cite{Visual}.
 
 \section{Листинг кода}
-\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих последовательный алгоритм Винограда и его модификации в виде распараллеленных алгоритмов.
-\begin{lstlisting}[label=code1, caption = Последовательный алгоритм Винограда]
+\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих последовательный алгоритм Винограда и его модификации в виде распараллеленных алгоритмов.\\
+
+\begin{lstlisting}[label=code1, caption = Последовательный алгоритм Винограда, captionpos=b]
 #include "winograd_mult.h"
 
 matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
@@ -50,7 +51,7 @@ matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
 }
 \end{lstlisting}
 
-\begin{lstlisting}[label=code2, caption = Распараллеленный алгоритм Винограда (1 вариант)]
+\begin{lstlisting}[label=code2, caption = Распараллеленный алгоритм Винограда (1 вариант), captionpos=b]
 #include "parall_winograd.h"
 
 mutex set_mutex;
@@ -116,7 +117,7 @@ matrix_t parall_winograd_mult_1(matrix_t a, matrix_t b, int m, int n, int q, int
 
 \end{lstlisting}
 
-\begin{lstlisting}[label=code3, caption = Распараллеленный алгоритм Винограда (2 вариант)]
+\begin{lstlisting}[label=code3, caption = Распараллеленный алгоритм Винограда (2 вариант), captionpos=b]
 #include "parall_winograd.h"
 
 mutex set_mutex;
@@ -185,9 +186,9 @@ matrix_t parall_winograd_mult_2(matrix_t a, matrix_t b, int m, int n, int q, int
 \section{Результаты тестов}
 \qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.\\
 
-\textbf{Все тесты пройдены успешно.} На Листинге \ref{code_test} представлены сами тесты.
+\textbf{Все тесты пройдены успешно.} На Листинге \ref{code_test} представлены сами тесты.\\
 
-\begin{lstlisting}[label=code_test, caption = Тесты]
+\begin{lstlisting}[label=code_test, caption = Тесты, captionpos=b]
 #include "tests.h"
 
 double PCFreq = 0.0;
@@ -210,7 +211,6 @@ bool mult_cmp(matrix_t a, matrix_t b, int m, int n, int q, int num_thread = 5)
 void test_size_1_1()
 {
 	int n = 1;
-	
 	matrix_t a = create_matrix(n, n);
 	matrix_t b = create_matrix(n, n);
 	
@@ -348,8 +348,9 @@ void run_tests()
 \end{lstlisting}
 
 \section{Оценка времени}
-\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг \ref{code_time}).
-\begin{lstlisting}[label=code_time, caption = Замеры процессорного времени]
+\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг \ref{code_time}).\\
+
+\begin{lstlisting}[label=code_time, caption = Замеры процессорного времени, captionpos=b]
 void test_range(int n, vector<int>& num_threads)
 {
 	for (int key : num_threads)
