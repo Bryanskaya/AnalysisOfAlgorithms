@@ -1,0 +1,264 @@
+В данном разделе будут приведены листинги функций разрабатываемых алгоритмов шифрования и работы конвейера.
+
+\section{Выбранный язык программирования}
+\qquadДля выполнения этой лабораторной работы был выбран язык программирования C++, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения тестирования и замеров. Для реализации потоков использовались библиотеки $thread$ \cite{thread}, $mutex$ \cite{mutex}, для очередей -- $queue$ \cite{queue}. 
+
+Использованная среда разработки - Visual Studio \cite{Visual}.
+
+\section{Листинг кода}
+\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих алгоритмы шифрования символьных строк. На Листингах \ref{code4}, \ref{code5} приведёны функции, работающие с конвейером. 
+
+\begin{lstlisting}[label=code1, caption = Алгоритм c использованием операции XOR]
+void xor_simple(string& str, string key)
+{
+	for (size_t i = 0; i < str.length(); i++)
+		str[i] = (str[i] ^ key[0]) % 256;
+	
+	if (key.length() > 1)
+		for (size_t i = 0; i < str.length(); i += 3)
+			str[i] = (str[i] ^ key[1]) % 256;
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[label=code2, caption = Шифр Виженера]
+void vigenere_code(string& str, string key)
+{
+	for (size_t i = 0; i < str.length(); i++)
+		str[i] = (str[i] + key[i % key.length()]) % 256;
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[label=code3, caption = Транспозиция]
+void transposition(string& str)
+{
+	char temp;
+	
+	for (size_t i = 0; i < str.length() - 1; i += 2)
+	{
+		temp = str[i];
+		str[i] = str[i + 1];
+		str[i + 1] = temp;
+	}
+	
+	for (size_t i = 0; i < str.length() / 2; i += 2)
+	{
+		temp = str[i];
+		str[i] = str[str.length() - i - 1];
+		str[str.length() - i - 1] = temp;
+	}
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[label=code4, caption = Работа с конвейером]
+queue<shared_ptr<task>> organize_queue(int count, int len_str, int len_key)
+{
+	queue<shared_ptr<task>> q_tasks;
+	
+	for (int i = 0; i < count; i++)
+	{
+		string str = generate_string(len_str);
+		string key_letter = generate_string(len_key);
+		
+		shared_ptr<task> ptr(new task);
+		ptr->str = str;
+		ptr->key = key_letter;
+		
+		q_tasks.push(ptr);
+	}
+	
+	return q_tasks;
+}
+
+void do_task(int count)
+{
+	int length_str = 1000000;
+	int length_key = 20;
+	double t, cur_process, cur_delay, time_start, time_end;
+	double max_process = -1, min_process = 1000000, avg_process = 0,
+	max_delay = -1, min_delay = 1000000, avg_delay = 0;
+	
+	queue<shared_ptr<task>> q_tasks = organize_queue(count, length_str, length_key);
+	queue<shared_ptr<task>> q_done_1, q_done_2, q_result;
+	
+	shared_ptr<task> temp;
+	
+	vector<thread> thread_arr;
+	
+	start_measuring();
+	
+	thread_arr.push_back(thread(process_thread_1, ref(q_tasks), ref(q_done_1)));
+	thread_arr.push_back(thread(process_thread_2, ref(q_done_1), ref(q_done_2), count));
+	thread_arr.push_back(thread(process_thread_3, ref(q_done_2), ref(q_result), count));
+	
+	for (int i = 0; i < thread_arr.size(); i++)
+		thread_arr[i].join();
+	
+	cout << endl << endl << " #";
+	cout << "1st process (in/out) ";
+	cout << " 2nd process (in/out) ";;
+	cout << " 3d process (in/out)" << endl;
+	
+	for (int i = 0; i < count; i++)
+	{
+		temp = q_result.front();
+		if (i == 0)
+			time_start = temp->time_in_1;
+		else if (i == count - 1)
+			time_end = temp->time_out_3;
+		
+		cout << i + 1;
+		cout << temp->time_in_1 << " - " << temp->time_out_1;
+		cout << temp->time_in_2 << " - " << temp->time_out_2; 
+		cout << temp->time_in_3 << " - " << temp->time_out_3 << endl;
+		q_result.pop();
+		
+		cur_process = temp->time_out_3 - temp->time_in_1;
+		if (cur_process > max_process)
+			max_process = cur_process;
+		if (cur_process < min_process)
+			min_process = cur_process;
+		
+		avg_process += cur_process;
+		
+		cur_delay = temp->time_in_2 - temp->time_out_1;
+		if (cur_delay > max_delay)
+			max_delay = cur_delay;
+		if (cur_delay < min_delay)
+			min_delay = cur_delay;
+		
+		avg_delay += cur_delay;
+		
+		cur_delay = temp->time_in_3 - temp->time_out_2;
+		if (cur_delay > max_delay)
+			max_delay = cur_delay;
+		if (cur_delay < min_delay)
+			min_delay = cur_delay;
+		
+		avg_delay += cur_delay;
+	}   
+	avg_process /= count;
+	avg_delay /= (count / 2);
+	
+	cout << "Min";
+	cout << "Max";
+	cout << "Avg" << endl;
+	
+	cout << "Whole task";
+	cout << min_process;
+	cout << max_process;
+	cout << avg_process << endl;
+	
+	cout << "Delay";
+	cout << min_delay;
+	cout << max_delay;
+	cout << avg_delay << endl << endl;
+	
+	cout << "General time: " << time_end - time_start << endl;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code5, caption = Ленты конвейера]
+mutex set_mutex;
+
+void process_thread_1(queue<shared_ptr<task>>& q_in, queue<shared_ptr<task>>& q_out)
+{
+	while (!q_in.empty()) {
+		shared_ptr<task> ptr(q_in.front());
+		q_in.pop();
+		
+		double t = get_measured();
+		ptr->time_in_1 = t;
+		
+		xor_simple(ptr->str, ptr->key);
+		
+		t = get_measured();
+		ptr->time_out_1 = t;
+		
+		set_mutex.lock();
+		q_out.push(ptr);
+		set_mutex.unlock();
+	}
+}
+	
+void process_thread_2(queue<shared_ptr<task>>& q_in, queue<shared_ptr<task>>& q_out, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		while (q_in.empty()) {}
+		
+		shared_ptr<task> ptr(q_in.front());
+		set_mutex.lock();
+		q_in.pop();
+		set_mutex.unlock();
+		
+		double t = get_measured();
+		ptr->time_in_2 = t;
+		
+		vigenere_code(ptr->str, ptr->key);
+		
+		t = get_measured();
+		ptr->time_out_2 = t;
+		
+		set_mutex.lock();
+		q_out.push(ptr);
+		set_mutex.unlock();
+	}
+}
+	
+void process_thread_3(queue<shared_ptr<task>>& q_in, queue<shared_ptr<task>>& q_out, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		while (q_in.empty()) {}
+		
+		shared_ptr<task> ptr(q_in.front());
+		set_mutex.lock();
+		q_in.pop();
+		set_mutex.unlock();
+		
+		double t = get_measured();
+		ptr->time_in_3 = t;
+		transposition(ptr->str);
+		t = get_measured();
+		ptr->time_out_3 = t;
+		
+		q_out.push(ptr);
+	}
+}
+\end{lstlisting}
+
+\section{Замеры времени}
+\qquadДля того, чтобы отследить в какой момент времени конкретная задача была подана на ленту и когда закончилась её обработка, были написаны специальные функции (Листинг \ref{code_time}), использующие метод QueryPerformanceCounter библиотеки windows.h \cite{Query}.
+
+\begin{lstlisting}[label=code_time, caption = Работа со временем]
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+
+void start_measuring()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
+	
+	PCFreq = double(li.QuadPart) / 1000;
+	
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double get_measured()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+\end{lstlisting}
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+\qquadБыли разработаны функции, реализующие выбранные алгоритмы шифрования символьных строк, также алгоритм работы конвейера, удовлетворяющий всем требованиям, и приведены листинги кода каждой из них.
+
