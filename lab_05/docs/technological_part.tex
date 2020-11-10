@@ -231,7 +231,7 @@ void process_thread_3(queue<shared_ptr<task>>& q_in, queue<shared_ptr<task>>& q_
 \end{lstlisting}
 
 \section{Замеры времени}
-\qquadДля того, чтобы отследить в какой момент времени конкретная задача была подана на ленту и когда закончилась её обработка, были написаны специальные функции (Листинг \ref{code_time}), использующие метод QueryPerformanceCounter библиотеки windows.h \cite{Query}.
+\qquadДля того, чтобы отследить, в какой момент времени конкретная задача была подана на ленту и когда закончилась её обработка, были написаны специальные функции (Листинг \ref{code_time}), использующие метод QueryPerformanceCounter библиотеки windows.h \cite{Query}.
 
 \begin{lstlisting}[label=code_time, caption = Работа со временем]
 double PCFreq = 0.0;
