@@ -1,0 +1,103 @@
+Проведём замеры процессорного времени, которое затрачивается каждым алгоритмом на умножение матриц различного размера, и сравним полученные результаты.
+
+\section{Характеристики ПК}
+\qquadПри проведении замеров времени использовался компьютер, имеющий следующие характеристики:
+\begin{itemize}
+	\item OC - Windows 10 Pro;
+	\item процессор - Inter Core i7 10510U (1800 МГц);
+	\item объём ОЗУ - 16 Гб;
+	\item число логических ядер - 8.
+\end{itemize}
+
+\section{Измерения}
+\qquadДля проведения замеров процессорного времени использовались квадратные матрицы размера $N \times N$, где
+$N \in \left\lbrace 100, 200, 400, 600, 800, 1000 \right\rbrace$.
+Их содержимое генерируется случайным образом.\\
+
+На графике \ref{fig6:graph} представлены результаты замеров процессорного времени работы реализаций алгоритмов (в секундах). В процессе измерения варьировался не только размер умножаемых матриц, но и количество потоков $K$ в параллельных алгоритмах, где $K \in \left\lbrace 1, 2, 4, 8, ... 4M \right\rbrace, M$ - число логических ядер.\\
+
+\begin{figure}[h]
+	%\vspace{-6.5cm}
+\begin{tikzpicture}
+	\hspace*{-25mm}
+	\begin{axis}[
+		height = 0.55\paperheight, 
+		width = 0.43\paperwidth,
+		axis lines = left,
+		xlabel = {$N$},
+		ylabel = {Время (сек)},
+		legend pos=north west,
+		grid = major
+		]
+		
+		\addplot[color=red, mark=square] table[x index=0, y index= 1] {time_results/const_winograd.txt};
+	
+		\addplot[color = orange, mark=square] table[x index=0, y index= 1] {time_results/parall_1_1.txt};
+		\addplot[dashed, color=orange!60!black, mark=square] table[x index=0, y index= 1] {time_results/parall_2_1.txt};
+		
+		\addplot[color = blue, mark=square] table[x index=0, y index= 1] {time_results/parall_1_2.txt};
+		\addplot[dashed, color = blue, mark=square] table[x index=0, y index= 1] {time_results/parall_2_2.txt};
+		
+		\addplot[color = yellow!70!black, mark=square] table[x index=0, y index= 1] {time_results/parall_1_4.txt};
+		\addplot[dashed, color = yellow!70!black, mark=square] table[x index=0, y index= 1] {time_results/parall_2_4.txt};
+		
+		\addlegendentry{Последовательный Виноград}
+		\addlegendentry{1 вариант распар. (1 поток)}
+		\addlegendentry{2 вариант распар. (1 поток)}
+		\addlegendentry{1 вариант распар. (2 потока)}
+		\addlegendentry{2 вариант распар. (2 потока)}
+		\addlegendentry{1 вариант распар. (4 потока)}
+		\addlegendentry{2 вариант распар. (4 потока)}
+	\end{axis}
+
+	\begin{axis}[
+		xshift = 10cm,
+		height = 0.55\paperheight, 
+		width = 0.43\paperwidth,
+		axis lines = left,
+		xlabel = {$N$},
+		ylabel = {Время (сек)},
+		legend pos=north west,
+		grid = major
+		]
+
+		\addplot[color = green, mark=square] table[x index=0, y index= 1] {time_results/parall_1_8.txt};
+		\addplot[dashed, color = green, mark=square] table[x index=0, y index= 1] {time_results/parall_2_8.txt};
+		
+		\addplot[color = black, mark=square] table[x index=0, y index= 1] {time_results/parall_1_16.txt};
+		\addplot[dashed, color = black, mark=square] table[x index=0, y index= 1] {time_results/parall_2_16.txt};
+		
+		\addplot[color = purple, mark=square] table[x index=0, y index= 1] {time_results/parall_1_32.txt};
+		\addplot[dashed, color = purple, mark=square] table[x index=0, y index= 1] {time_results/parall_2_32.txt};
+		
+		\addplot[color=white] coordinates {(1000, 5.77474)};
+
+		
+		\addlegendentry{1 вариант распар. (8 потоков)}
+		\addlegendentry{2 вариант распар. (8 потоков)}
+		\addlegendentry{1 вариант распар. (16 потоков)}
+		\addlegendentry{2 вариант распар. (16 потоков)}
+		\addlegendentry{1 вариант распар. (32 потока)}
+		\addlegendentry{2 вариант распар. (32 потока)}
+	\end{axis}
+\end{tikzpicture}
+\caption{Сравнение времени работы последовательного Винограда и двух вариантов распараллеливания алгоритма}
+\label{fig6:graph}
+\end{figure}
+
+\newpage
+
+Согласно полученным данным можно сделать следующие \textbf{выводы}:
+\begin{itemize}
+	\item обе версии параллельных алгоритмов на одном потоке показывают результаты хуже (примерно на 20\%), чем последовательный алгоритм Винограда, в силу того, что организация и работа с потоками требуют дополнительных временных затрат;
+	\item начиная с двух потоков обе версии параллельного алгоритма обрабатывают матрицы эффективнее, чем алгоритм Винограда;
+	\item 1 вариант распараллеливания (по строкам) работает быстрее 2 варианта (распараллеливание по столбцам), до четырёх потоков разница составляет меньше 3\%, а с восьми до тридцати двух потоков разница может варьироваться от 15\% до 30\% (на шестнадцати потоках);
+	\item самым быстродейственным по времени оказался 1 вариант параллельного алгоритма (расспараллеливание по строкам) на шестнадцати потоках, по сравнению с последовательным алгоритмом Винограда он лучше на 53\% на матрицах размером меньше $1000 \times 1000$, а на больших преимущество превышает 70\%;
+	\item увеличение количества потоков до тридцати двух не оправдано, затрачиваемое время значительно больше того, что было при меньшем количестве потоков.
+	\end{itemize}
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+\qquadПроведены замеры процессорного времени, и на основе полученных данных были построены графики, описывающие время, которое каждый из алгоритмов затрачивает на умножение матриц конкретного размера, а в случае многопоточных алгоритмов ещё и зависимость времени от количества выделенных потоков. В результате анализа получившихся графиков были сделаны выводы, приведённые выше.
+
+

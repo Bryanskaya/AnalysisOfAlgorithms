@@ -1,0 +1,2 @@
+C:\msys64\home\bryan\AnalysisOfAlgorithms\lab_03\lab_03\x64\Debug\lab_03.exe
+C:\msys64\home\bryan\AnalysisOfAlgorithms\lab_03\lab_03\x64\Debug\lab_03.pdb

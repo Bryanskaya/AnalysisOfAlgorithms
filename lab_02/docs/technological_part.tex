@@ -1,0 +1,341 @@
+\section{Выбранный язык программирования}
+\qquadДля выполнения этой лабораторной работы был выбран язык программирования C++, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения тестирования и замеров.\\
+
+Использованная среда разработки - Visual Studio \cite{Visual}.
+
+\section{Листинг кода}
+\qquadНиже представлены Листиги 3.1 - 3.3 функций, реализующих алгоритмы поиска расстояний.
+\begin{lstlisting}[label=code, caption = Стандартный алгоритм умножения матриц]
+	matrix_t standart_mult(matrix_t a, matrix_t b, int m, int n, int q)
+	{
+		matrix_t c = create_matrix(m, q);
+		
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < q; j++)
+			{
+				c[i][j] = 0;
+				for (int k = 0; k < n; k++)
+					c[i][j] += a[i][k] * b[k][j];
+			}
+		
+		return c;
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code, caption = Алгоритм Винограда]
+matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
+{
+	arr_t mulH = create_array(m);
+	arr_t mulV = create_array(q);
+	matrix_t c = create_matrix(m, q);
+	
+	for (int i = 0; i < m; i++)
+	{
+		mulH[i] = 0;
+		for (int k = 0; k < n / 2; k++)
+			mulH[i] = mulH[i] + a[i][2 * k] * a[i][2 * k + 1];
+	}
+	
+	for (int i = 0; i < q; i++)
+	{
+		mulV[i] = 0;
+		for (int k = 0; k < n / 2; k++)
+			
+			mulV[i] = mulV[i] + b[2 * k][i] * b[2 * k + 1][i];
+	}
+	
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < q; j++)
+		{
+			c[i][j] = -mulH[i] - mulV[j];
+			for (int k = 0; k < n / 2; k++)
+				c[i][j] = c[i][j] + (a[i][2 * k] + b[2 * k + 1][j]) * 
+						  		(a[i][2 * k + 1] + b[2 * k][j]);
+		}
+	
+	if (n % 2)
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < q; j++)
+				c[i][j] = c[i][j] + a[i][n - 1] * b[n - 1][j];
+	
+	return c;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code, caption = Оптимизированный алгоритм Винограда]
+matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
+{
+	arr_t mulH = create_array(m);
+	arr_t mulV = create_array(q);
+	double buf;
+	
+	matrix_t c = create_matrix(m, q);
+	
+	for (int i = 0; i < m; i++)
+	{
+		buf = 0;
+		for (int k = 1; k < n; k += 2)
+			buf += a[i][k] * a[i][k - 1];
+		mulH[i] = buf;
+	}
+	
+	for (int i = 0; i < q; i++)
+	{
+		buf = 0;
+		for (int k = 1; k < n; k += 2)
+			buf += b[k][i] * b[k - 1][i];
+		mulV[i] = buf;
+	}
+	
+	int temp = n - 1;
+	int is_odd = n % 2;
+	
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < q; j++)
+		{
+			buf = -(mulH[i] + mulV[j]);
+			for (int k = 1, t = 0; k < n; k += 2, t +=2)
+				buf += (a[i][k] + b[t][j]) * (a[i][t] + b[k][j]);
+			c[i][j] = buf;
+			
+			if (is_odd)
+				c[i][j] += a[i][temp] * b[temp][j];
+		}
+	
+	return c;
+}
+\end{lstlisting}
+
+\section{Результаты тестов}
+\qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.
+
+\textbf{Все тесты пройдены успешно.} Сами тесты представлены ниже (Листинг 3.4).\\
+
+\begin{lstlisting}[label=code, caption = Тесты]
+bool mult_cmp(matrix_t a, matrix_t b, int m, int n, int q)
+{
+	matrix_t c1 = standart_mult(a, b, m, n, q);
+	matrix_t c2 = winograd_mult(a, b, m, n, q);
+	
+	bool res = cmp_matrix(c1, c2, m, q);
+	
+	free_matrix(&c1, m, q);
+	free_matrix(&c2, m, q);
+	
+	return res;
+}
+
+// Матрицы размером 1 х 1
+void test_size_1_1()
+{
+	int n = 1;
+	
+	matrix_t a = create_matrix(n, n);
+	matrix_t b = create_matrix(n, n);
+	
+	a[0][0] = 15;
+	b[0][0] = -7;
+	
+	if (!mult_cmp(a, b, n, n, n))
+	{
+		cout << endl << __FUNCTION__ << " FAILED" << endl;
+		free_matrix(&a, n, n);
+		free_matrix(&b, n, n);
+		return;
+	}
+	
+	free_matrix(&a, n, n);
+	free_matrix(&b, n, n);
+	
+	cout << endl << __FUNCTION__ << " OK" << endl;
+}
+
+// Квадратные матрицы
+void test_square_matr()
+{
+	int n[] = { 2, 6, 10 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(n[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], n[i]);
+		
+		if (!mult_cmp(a, b, n[i], n[i], n[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, n[i], n[i]);
+			free_matrix(&b, n[i], n[i]);
+			return;
+		}
+		
+		free_matrix(&a, n[i], n[i]);
+		free_matrix(&b, n[i], n[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Прямоугольные матрицы
+void test_rectangulat_matr()
+{
+	int m[] = { 2, 6, 10 };
+	int n[] = { 1, 4, 7 };
+	int q[] = { 3, 4, 8 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Матрицы с чётным размером
+void test_even_size()
+{
+	int m[] = { 2, 4 };
+	int n[] = { 6, 2 };
+	int q[] = { 2, 8 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Матрицы с нечётным размером
+void test_odd_size()
+{
+	int m[] = { 3, 3 };
+	int n[] = { 3, 1 };
+	int q[] = { 5, 7 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+void run_tests()
+{
+	test_size_1_1();
+	test_square_matr();
+	test_rectangulat_matr();
+	test_even_size();
+	test_odd_size();
+}
+\end{lstlisting}
+
+\section{Оценка трудоёмкости}
+\qquadПроизведём оценку трудоёмкости приведённых алгоритмов. Рассмотрим умножение матриц $A[M \times N]$ и $B[N \times Q]$.\\
+
+\textbf{Стандартный алгоритм}\\
+$f_{st} = 2 + M(2 + 2 + Q(3 + 2 + 2 + N(2 + 1 + 2 + 2 + 1 + 2)))$\\
+$f_{st} = 2 + 4M + 7MQ + 10MNQ$\\
+
+\textbf{Алгоритм Винограда (неоптимизированный)}\\
+$f_{w} = 2 + M(2 + 3 + 2 + \frac{N}{2} (12 + 3)) + 
+2 + Q(2 + 3 + 2 + \frac{N}{2}(12 + 3)) + 
+2 + M(2 + 2 + Q(7 + 2 + 3 + \frac{N}{2}(23 + 3))) + 
+1 + $$\left[ 
+\begin{array}{ll}
+	0, & $л.с.$\\
+	2 + M(2 + 2 + Q(13 + 2)), & $х.с.$
+\end{array} \right.$\\
+$f_{w} = 7 + 11M + 7Q + \frac{15}{2}MN + \frac{15}{2}NQ + 12MQ + 13MNQ +
+$$\left[\begin{array}{ll}
+	0, & $л.с.$\\
+	2 + 4M + 15MQ, & $х.с.$
+\end{array} \right.$\\
+
+\textbf{Алгоритм Винограда (оптимизированный)}\\
+$f_{wop} = 2 + M(2 + 1 + 2 + \frac{N}{2}(7 + 2) + 2) + 2 + Q(2 + 1 + 2 + \frac{N}{2}(7 + 2) + 2) + 2 + 2 + M(2 + 2 + Q(2 + 4 + 3 + \frac{N}{2}(3 + 12) + 3 + 1 + $$\left[\begin{array}{ll}
+	0, & $л.с.$\\
+	8, & $х.с.$
+\end{array} \right.$))\\
+$f_{wop} = 8 + 11M + 7Q + 4.5MN + 4.5NQ + 13MQ + 7.5MNQ +$$\left[\begin{array}{ll}
+	0, & $л.с.$\\
+	8MQ, & $х.с.$
+\end{array} \right.$\\
+
+\section{Оценка времени}
+\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг 3.5).
+\begin{lstlisting}[label=code, caption = Замеры процессорного времени]
+void test_time(matrix_t(*f)(matrix_t, matrix_t, int, int, int), int n)
+{
+	matrix_t a = random_fill_matrix(n, n);
+	matrix_t b = random_fill_matrix(n, n);
+	matrix_t c;
+	
+	int num = 0;
+	start_measuring();
+	
+	while (get_measured() < 3 * 1000)
+	{
+		c = f(a, b, n, n, n);
+		free_matrix(&c, n, n);
+		num++;
+	}
+	
+	double t = get_measured() / 1000;
+	cout << "Выполнено " << num << " операций за " << t << " секунд" << endl;
+	cout << "Время: " << t / num << endl;
+	
+	free_matrix(&a, n, n);
+	free_matrix(&b, n, n);
+}
+
+void test_range(vector<int> &n)
+{
+	for (int key : n)
+	{
+		cout << endl << endl << "Размер тестируемых матриц: " << key << "x" << key << endl;
+		
+		cout << endl << "-----Standart-----" << endl;
+		test_time(standart_mult, key);
+		cout << endl << "-----Winograd-----" << endl;
+		test_time(winograd_mult, key);
+		cout << endl << "-----Winograd(improved)-----" << endl;
+		test_time(winograd_opt_mult, key);
+	}
+}
+\end{lstlisting}
