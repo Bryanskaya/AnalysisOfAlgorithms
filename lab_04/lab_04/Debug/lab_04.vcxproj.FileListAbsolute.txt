@@ -1,2 +1,0 @@
-C:\msys64\home\bryan\AnalysisOfAlgorithms\lab_04\lab_04\Debug\lab_04.exe
-C:\msys64\home\bryan\AnalysisOfAlgorithms\lab_04\lab_04\Debug\lab_04.pdb
