@@ -1,0 +1,441 @@
+В данном разделе будут приведены листинги функций разрабатываемых алгоритмов и проведено их тестирование.
+
+\section{Выбранный язык программирования}
+\qquadДля выполнения этой лабораторной работы был выбран язык программирования C++, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения тестирования и замеров. Для реализации параллельных алгоритмов использовались библиотеки $thread$ \cite{thread}, $mutex$ \cite{mutex}. 
+
+Использованная среда разработки - Visual Studio \cite{Visual}.
+
+\section{Листинг кода}
+\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих последовательный алгоритм Винограда и его модификации в виде распараллеленных алгоритмов.\\
+
+\begin{lstlisting}[label=code1, caption = Последовательный алгоритм Винограда, captionpos=b]
+#include "winograd_mult.h"
+
+matrix_t winograd_mult(matrix_t a, matrix_t b, int m, int n, int q)
+{
+	arr_t mulV = create_array(q);
+	int temp = n - 1;
+	double mulH, buf;
+	
+	matrix_t c = create_matrix(m, q);
+	
+	for (int i = 0; i < q; i++)
+	{
+		buf = 0;
+		for (int k = 1; k < n; k += 2)
+		buf += b[k][i] * b[k - 1][i];
+		mulV[i] = buf;
+	}
+	
+	for (int i = 0; i < m; i++)
+	{
+		mulH = 0;
+		for (int k = 1; k < n; k += 2)
+			mulH += a[i][k] * a[i][k - 1];
+		
+		for (int j = 0; j < q; j++)
+		{
+			buf = -(mulH + mulV[j]);
+			for (int k = 1, t = 0; k < n; k += 2, t += 2)
+				buf += (a[i][k] + b[t][j]) * (a[i][t] + b[k][j]);
+			c[i][j] = buf;
+			
+			if (n % 2)
+				c[i][j] += a[i][temp] * b[temp][j];
+		}
+	}
+	
+	free_array(&mulV);
+	
+	return c;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code2, caption = Распараллеленный алгоритм Винограда (1 вариант), captionpos=b]
+#include "parall_winograd.h"
+
+mutex set_mutex;
+
+
+void process_threads_1(matrix_t& c, int start, matrix_t& a, matrix_t& b, int m, int n, int q, arr_t mulV, int step)
+{
+	double mulH, buf;
+	int temp = n - 1;
+	
+	for (int i = start; i < m; i += step)
+	{
+		mulH = 0;
+		for (int k = 1; k < n; k += 2)
+			mulH += a[i][k] * a[i][k - 1];
+		
+		for (int j = 0; j < q; j++)
+		{
+			buf = -(mulH + mulV[j]);
+			for (int k = 1, t = 0; k < n; k += 2, t += 2)
+				buf += (a[i][k] + b[t][j]) * (a[i][t] + b[k][j]);
+			
+			set_mutex.lock();
+			c[i][j] = buf;
+			set_mutex.unlock();
+			
+			if (n % 2)
+			{
+				set_mutex.lock();
+				c[i][j] += a[i][temp] * b[temp][j];
+				set_mutex.unlock();
+			}
+		}
+	}
+}
+
+matrix_t parall_winograd_mult_1(matrix_t a, matrix_t b, int m, int n, int q, int num_thread)
+{
+	arr_t mulV = create_array(q);
+	double buf;
+	
+	matrix_t c = create_matrix(m, q);
+	vector<thread> thread_arr;
+	
+	for (int i = 0; i < q; i++)
+	{
+		buf = 0;
+		for (int k = 1; k < n; k += 2)
+			buf += b[k][i] * b[k - 1][i];
+		mulV[i] = buf;
+	}
+	
+	for (int i = 0; i < num_thread; i++)
+		thread_arr.push_back(thread(process_threads_1, ref(c), i, ref(a), ref(b), m, n, q, mulV, num_thread));
+	
+	for (int i = 0; i < num_thread; i++)
+		thread_arr[i].join();
+	
+	free_array(&mulV);
+	
+	return c;
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[label=code3, caption = Распараллеленный алгоритм Винограда (2 вариант), captionpos=b]
+#include "parall_winograd.h"
+
+mutex set_mutex;
+
+
+void process_threads_2(matrix_t& c, int start, matrix_t& a, matrix_t& b, int m, int n, int q, arr_t mulV, int step)
+{
+	double mulH, buf;
+	int temp = n - 1;
+	
+	for (int i = 0; i < m; i++)
+	{
+		mulH = 0;
+		for (int k = 1; k < n; k += 2)
+			mulH += a[i][k] * a[i][k - 1];
+		
+		for (int j = start; j < q; j += step)
+		{
+			buf = -(mulH + mulV[j]);
+			for (int k = 1, t = 0; k < n; k += 2, t += 2)
+				buf += (a[i][k] + b[t][j]) * (a[i][t] + b[k][j]);
+			
+			set_mutex.lock();
+			c[i][j] = buf;
+			set_mutex.unlock();
+			
+			if (n % 2)
+			{
+				set_mutex.lock();
+				c[i][j] += a[i][temp] * b[temp][j];
+				set_mutex.unlock();
+			}
+		}
+	}
+}
+
+matrix_t parall_winograd_mult_2(matrix_t a, matrix_t b, int m, int n, int q, int num_thread)
+{
+	arr_t mulV = create_array(q);
+	double buf;
+	
+	matrix_t c = create_matrix(m, q);
+	vector<thread> thread_arr;
+	
+	for (int i = 0; i < q; i++)
+	{
+		buf = 0;
+		for (int k = 1; k < n; k += 2)
+			buf += b[k][i] * b[k - 1][i];
+		mulV[i] = buf;
+	}
+	
+	for (int i = 0; i < num_thread; i++)
+		thread_arr.push_back(thread(process_threads_2, ref(c), i, ref(a), ref(b), m, n, q, mulV, num_thread));
+	
+	for (int i = 0; i < num_thread; i++)
+		thread_arr[i].join();
+	
+	free_array(&mulV);
+	
+	return c;
+}
+\end{lstlisting}
+
+
+\section{Результаты тестов}
+\qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.\\
+
+\textbf{Все тесты пройдены успешно.} На Листинге \ref{code_test} представлены сами тесты.\\
+
+\begin{lstlisting}[label=code_test, caption = Тесты, captionpos=b]
+#include "tests.h"
+
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+bool mult_cmp(matrix_t a, matrix_t b, int m, int n, int q, int num_thread = 5)
+{
+	matrix_t c1 = winograd_mult(a, b, m, n, q);
+	matrix_t c2 = parall_winograd_mult_1(a, b, m, n, q, num_thread);
+	
+	bool res = cmp_matrix(c1, c2, m, q);
+	
+	free_matrix(&c1, m, q);
+	free_matrix(&c2, m, q);
+	
+	return res;
+}
+
+// Матрицы размером 1 х 1
+void test_size_1_1()
+{
+	int n = 1;
+	matrix_t a = create_matrix(n, n);
+	matrix_t b = create_matrix(n, n);
+	
+	a[0][0] = 15;
+	b[0][0] = -7;
+	
+	if (!mult_cmp(a, b, n, n, n))
+	{
+		cout << endl << __FUNCTION__ << " FAILED" << endl;
+		free_matrix(&a, n, n);
+		free_matrix(&b, n, n);
+		return;
+	}
+	
+	free_matrix(&a, n, n);
+	free_matrix(&b, n, n);
+	
+	cout << endl << __FUNCTION__ << " OK" << endl;
+}
+
+// Один поток
+void test_one_thread()
+{
+	int m[] = { 2, 6, 10 };
+	int n[] = { 1, 4, 7 };
+	int q[] = { 3, 4, 8 };
+	int num_thread = 1;
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i], num_thread))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Потоков меньше, чем значения M, N, Q
+void test_less_mnq()
+{
+	int m[] = { 4, 8, 10 };
+	int n[] = { 3, 5, 12 };
+	int q[] = { 3, 6, 8 };
+	int num_thread[] = { 2, 4, 2 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i], num_thread[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Потоков больше, чем значения M, N, Q
+void test_more_mnq()
+{
+	int m[] = { 4, 8, 10 };
+	int n[] = { 3, 5, 12 };
+	int q[] = { 3, 6, 8 };
+	int num_thread[] = { 7, 10, 15 };
+	
+	for (int i = 0; i < sizeof(n) / sizeof(n[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m[i], n[i]);
+		matrix_t b = random_fill_matrix(n[i], q[i]);
+		
+		if (!mult_cmp(a, b, m[i], n[i], q[i], num_thread[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m[i], n[i]);
+			free_matrix(&b, n[i], q[i]);
+			return;
+		}
+		free_matrix(&a, m[i], n[i]);
+		free_matrix(&b, n[i], q[i]);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+// Умножение одних и тех же матриц на разном числе потоков
+void test_dif_num_threads()
+{
+	int m = 20, n = 17, q = 23;
+	int num_thread[] = { 1, 2, 5, 8, 10, 14, 16, 19, 20, 24, 26, 30 };
+	
+	for (int i = 0; i < sizeof(num_thread) / sizeof(num_thread[0]); i++)
+	{
+		matrix_t a = random_fill_matrix(m, n);
+		matrix_t b = random_fill_matrix(n, q);
+		
+		if (!mult_cmp(a, b, m, n, q, num_thread[i]))
+		{
+			cout << endl << __FUNCTION__ << " FAILED" << endl;
+			free_matrix(&a, m, n);
+			free_matrix(&b, n, q);
+			return;
+		}
+		free_matrix(&a, m, n);
+		free_matrix(&b, n, q);
+		
+		cout << endl << __FUNCTION__ << " OK" << endl;
+	}
+}
+
+void run_tests()
+{
+	test_size_1_1();
+	test_one_thread();
+	test_less_mnq();
+	test_more_mnq();
+	test_dif_num_threads();
+}
+\end{lstlisting}
+
+\section{Оценка времени}
+\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h \cite{Query}. Осуществление замеров показано ниже (Листинг \ref{code_time}).\\
+
+\begin{lstlisting}[label=code_time, caption = Замеры процессорного времени, captionpos=b]
+void test_range(int n, vector<int>& num_threads)
+{
+	for (int key : num_threads)
+	{
+		cout << endl << endl << "Размер тестируемых матриц: " << n << "x" << n << endl;
+		cout << "Количество потоков: " << key;
+		
+		cout << endl << "-----Winograd(improved)-----" << endl;
+		test_time_cons(winograd_mult, n);
+		cout << endl << "-----Parallel Winograd(1)-----" << endl;
+		test_time_parall(parall_winograd_mult_1, n, key);
+		cout << endl << "-----Parallel Winograd(2)-----" << endl;
+		test_time_parall(parall_winograd_mult_2, n, key);
+	}
+}
+
+void start_measuring()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
+	
+	PCFreq = double(li.QuadPart) / 1000;
+	
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double get_measured()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+
+// Замеры процессорного времени
+void test_time_parall(matrix_t(*f)(matrix_t, matrix_t, int, int, int, int), int n, int num_threads)
+{
+	matrix_t a = random_fill_matrix(n, n);
+	matrix_t b = random_fill_matrix(n, n);
+	matrix_t c;
+	
+	int num = 0;
+	start_measuring();
+	
+	while (get_measured() < 3 * 1000)
+	{
+		c = f(a, b, n, n, n, num_threads);
+		free_matrix(&c, n, n);
+		num++;
+	}
+	
+	double t = get_measured() / 1000;
+	cout << "Выполнено " << num << " операций за " << t << " секунд" << endl;
+	cout << "Время: " << t / num << endl;
+	
+	free_matrix(&a, n, n);
+	free_matrix(&b, n, n);
+}
+
+void test_time_cons(matrix_t(*f)(matrix_t, matrix_t, int, int, int), int n)
+{
+	matrix_t a = random_fill_matrix(n, n);
+	matrix_t b = random_fill_matrix(n, n);
+	matrix_t c;
+	
+	int num = 0;
+	start_measuring();
+	
+	while (get_measured() < 3 * 1000)
+	{
+		c = f(a, b, n, n, n);
+		free_matrix(&c, n, n);
+		num++;
+	}
+	
+	double t = get_measured() / 1000;
+	cout << "Выполнено " << num << " операций за " << t << " секунд" << endl;
+	cout << "Время: " << t / num << endl;
+	
+	free_matrix(&a, n, n);
+	free_matrix(&b, n, n);
+}
+\end{lstlisting}
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+\qquadБыли разработаны функции, реализующие текущие алгоритмы, приведены листинги кода каждой из них, а также листинги тестовых функций, направленных на проверку корректности их работы, и замеров процессорного времени.
