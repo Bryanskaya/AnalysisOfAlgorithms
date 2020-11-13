@@ -32,7 +32,7 @@ void xor_simple(string& str, string key)
 	for (size_t i = 0; i < str.length(); i++)
 		str[i] = (str[i] ^ key[0]) % 256;
 
-	//if (key.length() > 1)
+	if (key.length() > 1)
 		for (size_t i = 0; i < str.length(); i += 3)
 			str[i] = (str[i] ^ key[1]) % 256;
 }
