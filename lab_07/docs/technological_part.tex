@@ -1,0 +1,410 @@
+В данном разделе будут приведены листинги функций разрабатываемых алгоритмов поиска ключа.
+
+\section{Выбранный язык программирования}
+\qquadДля выполнения этой лабораторной работы был выбран язык программирования C++, так как есть большой навык работы с ним и с подключаемыми библиотеками, которые также использовались для проведения тестирования и замеров. \cite{c_plus_plus}
+
+Использованная среда разработки - Visual Studio. \cite{Visual}
+
+\section{Листинг кода}
+\qquadНиже представлены Листиги \ref{code1}, \ref{code2}, \ref{code3} функций, реализующих алгоритмы поиска ключей в словаре. В Листинге \ref{code4} показаны собственные типы, используемые в написании функций. А в Листингах \ref{code5}, \ref{code6} приведены вспомогательные функции сортировки и разделения словаря по сегментам.
+
+\begin{lstlisting}[label=code1, caption = Поиск полным перебором]
+s_p full_search(string key, sp_arr& data)
+{
+	int len = data.size();
+	
+	for (int i = 0; i < len; i++)
+		if (data[i].key == key)
+			return data[i];
+	return not_found();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code2, caption = Поиск в упорядоченном словаре двоичным поиском]
+s_p ordered_search(string key, sp_arr& data)
+{
+	int left = 0, right = data.size() - 1;
+	
+	while (right >= left) {
+		int middle = (left + right) / 2;   
+		
+		if (data[middle].key < key)
+			left = middle + 1;
+		else if (data[middle].key > key)
+			right = middle - 1;
+		else
+			return data[middle];
+	}
+	return not_found();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code3, caption = Поиск полным перебором с использованием сегментов]
+s_p segment_search(string key, sgm_arr& data)
+{
+	string part_key = key.substr(key.rfind('.') + 1);;
+	
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		for (size_t j = 0; j < data[i].key.size(); j++)
+			if (data[i].key[j] == part_key)
+			{
+				sp_arr& arr = data[i].value;
+				return full_search(key, arr);
+			}
+	}
+	
+	return not_found();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code4, caption = Используемые типы]
+using s_p = struct
+{
+	string key;
+	string value;
+};
+using sp_arr = vector<s_p>;
+
+using sgm = struct
+{
+	vector<string> key;
+	sp_arr value;
+};
+using sgm_arr = vector<sgm>;
+\end{lstlisting}
+
+\begin{lstlisting}[label=code5, caption = Функция сортировки словаря]
+void sort_arr(sp_arr& data)
+{
+	s_p temp;
+	
+	for (size_t i = 0; i < data.size() - 1; i++)
+		for (size_t j = 0; j < data.size() - i - 1; j++)
+			if (data[j].key > data[j + 1].key) {
+				temp = data[j];
+				data[j] = data[j + 1];
+				data[j + 1] = temp;
+			}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=code6, caption = Функция разделения словаря по сегментам]
+sgm_arr split_segments(sp_arr& data)
+{
+	sgm_arr arr;
+	vector<string> keys_1 = { "ru", "com", "io" }, keys_2 = { "net", "biz", "org", "info" };
+	string part_key;
+	int flag = 0;
+	
+	for (size_t i = 0; i < keys_1.size(); i++)
+	{
+		sgm temp_1;
+		
+		temp_1.key.push_back(keys_1[i]);
+		arr.push_back(temp_1);
+	}
+	
+	for (size_t i = 0; i < keys_2.size() - 1; i += 2)
+	{
+		sgm temp_2;
+		
+		temp_2.key.push_back(keys_2[i]);
+		temp_2.key.push_back(keys_2[i + 1]);
+		
+		arr.push_back(temp_2);
+	}
+	
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		flag = 0;
+		part_key = data[i].key.substr(data[i].key.rfind('.') + 1);
+		
+		for (size_t j = 0; j < arr.size(); j++)
+		{
+			for (size_t k = 0; k < arr[j].key.size(); k++)
+			{
+				if (part_key == arr[j].key[k])
+				{
+					arr[j].value.push_back(data[i]);
+					flag = 1;
+					break;
+				}
+			}
+			if (flag)
+			break;
+		}
+	}
+	
+	return arr;
+}
+\end{lstlisting}
+
+\section{Результаты тестов}
+\qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.\\
+
+\textbf{Все тесты пройдены успешно.} Сами тесты представлены ниже (Листинг \ref{code_test}).\\
+
+\begin{lstlisting}[label=code_test, caption = Тесты]
+bool is_equal(s_p res, s_p ans)
+{
+	if (res.key == ans.key && res.value == ans.value)
+		return true;
+	return false;
+}
+
+// Нахождение первого элемента словаря
+void test_first_key(sp_arr& data)
+{
+	sgm_arr sgm_data;
+	
+	if (!is_equal(full_search(data[0].key, data), data[0]))
+		cout << endl << __FUNCTION__ << " full_search " << ":\tFAILED\n";
+	else
+		cout << endl << __FUNCTION__ << "\tfull_search " << ":\tSUCCESS\n";
+	
+	sort_arr(data);
+	if (!is_equal(ordered_search(data[0].key, data), data[0]))
+		cout << __FUNCTION__ << " ordered_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tordered_search " << ":\tSUCCESS\n";
+	
+	sgm_data = split_segments(data);
+	if (!is_equal(segment_search(data[0].key, sgm_data), data[0]))
+		cout << __FUNCTION__ << " segment_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tsegment_search " << ":\tSUCCESS\n";
+}
+
+// Нахождение каждого 100 элемента словаря
+void test_each_100_key(sp_arr& data)
+{
+	sgm_arr sgm_data;
+	int flag = 1;
+	
+	for (size_t i = 0; i < data.size(); i += 100)
+		if (!is_equal(full_search(data[i].key, data), data[i]))
+		{
+			cout << endl << __FUNCTION__ << " full_search " << ":\tFAILED\n";
+			flag = 0;
+			break;
+		}
+	if (flag)
+		cout << endl << __FUNCTION__ << "\tfull_search " << ":\tSUCCESS\n";
+	
+	flag = 1;
+	sort_arr(data);
+	for (size_t i = 0; i < data.size(); i += 100)
+		if (!is_equal(ordered_search(data[i].key, data), data[i]))
+		{
+			cout << __FUNCTION__ << " ordered_search " << ":\tFAILED\n";
+			flag = 0;
+			break;
+		}
+	if (flag)
+		cout << __FUNCTION__ << "\tordered_search " << ":\tSUCCESS\n";
+	
+	flag = 1;
+	sgm_data = split_segments(data);
+	for (size_t i = 0; i < data.size(); i += 100)
+		if (!is_equal(segment_search(data[i].key, sgm_data), data[i]))
+		{
+			cout << __FUNCTION__ << " segment_search " << ":\tFAILED\n";
+			flag = 0;
+			break;
+		}
+	if (flag)
+	cout << __FUNCTION__ << "\tsegment_search " << ":\tSUCCESS\n";
+}
+
+// Нахождение последнего элемента словаря
+void test_last_key(sp_arr& data)
+{
+	sgm_arr sgm_data;
+	
+	if (!is_equal(full_search(data[data.size() - 1].key, data), data[data.size() - 1]))
+		cout << endl << __FUNCTION__ << " full_search " << ":\tFAILED\n";
+	else
+		cout << endl << __FUNCTION__ << "\tfull_search " << ":\tSUCCESS\n";
+	
+	sort_arr(data);
+	if (!is_equal(ordered_search(data[data.size() - 1].key, data), data[data.size() - 1]))
+		cout << __FUNCTION__ << " ordered_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tordered_search " << ":\tSUCCESS\n";
+	
+	sgm_data = split_segments(data);
+	if (!is_equal(segment_search(data[data.size() - 1].key, sgm_data), data[data.size() - 1]))
+		cout << __FUNCTION__ << " segment_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tsegment_search " << ":\tSUCCESS\n";
+}
+
+// Нахождение несуществующего элемента словаря
+void test_not_exist_key(sp_arr& data)
+{
+	sgm_arr sgm_data;
+	s_p key_not_exst;
+	
+	key_not_exst.key = "123345";
+	key_not_exst.value = "000";
+	
+	if (!is_equal(full_search(key_not_exst.key, data), not_found()))
+		cout << endl << __FUNCTION__ << " full_search " << ":\tFAILED\n";
+	else
+		cout << endl << __FUNCTION__ << "\tfull_search " << ":\tSUCCESS\n";
+	
+	sort_arr(data);
+	if (!is_equal(ordered_search(key_not_exst.key, data), not_found()))
+		cout << __FUNCTION__ << " ordered_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tordered_search " << ":\tSUCCESS\n";
+	
+	sgm_data = split_segments(data);
+	if (!is_equal(segment_search(key_not_exst.key, sgm_data), not_found()))
+		cout << __FUNCTION__ << " segment_search " << ":\tFAILED\n";
+	else
+		cout << __FUNCTION__ << "\tsegment_search " << ":\tSUCCESS\n";
+}
+
+void run_tests(sp_arr& data)
+{
+	cout << "----- START TESTING -----" << endl;
+	
+	test_first_key(data);
+	test_each_100_key(data);
+	test_last_key(data);
+	test_not_exist_key(data);
+	
+	cout << endl << "----- FINISHED -----" << endl;
+}
+\end{lstlisting}	
+
+\section{Оценка времени}
+\qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h. \cite{Query} Осуществление замеров показано ниже (Листинг \ref{code_time}).
+
+\begin{lstlisting}[label=code_time, caption = Замеры процессорного времени]
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+void start_measuring()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
+	
+	PCFreq = double(li.QuadPart) / 1000;
+	
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double get_measured()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+
+void measure_time(func_t f, sp_arr& data)
+{
+	double min_t = 1e5, max_t = -1, avg_t = 0, t;
+	string key, not_exist_key = "123456";
+	int count;
+	
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		key = data[i].key;
+		count = 0;
+		
+		start_measuring();
+		while (get_measured() < 0.07 * 1000)
+		{
+			f(key, data);
+			count++;
+		}
+		
+		t = get_measured() / 1000 / count;
+		
+		cout << i + 1 << " " << t << endl;
+		
+		if (min_t > t)
+			min_t = t;
+		if (max_t < t)
+			max_t = t;
+		avg_t += t;
+	}
+	
+	avg_t /= data.size();
+	
+	count = 0;
+	start_measuring();
+	while (get_measured() < 0.07 * 1000)
+	{
+		f(not_exist_key, data);
+		count++;
+	}
+	
+	t = get_measured() / 1000 / count;
+	cout << "NOT EXISTS" << " " << t << endl;
+	
+	cout << "\nМаксимальное время:\t" << max_t << endl;
+	cout << "Минимальное время:\t" << min_t << endl;
+	cout << "Среднее время:\t\t" << avg_t << endl;
+}
+
+void measure_time_sgm(func_sgm_t f, sgm_arr& data)
+{
+	double min_t = 1e5, max_t = -1, avg_t = 0, t;
+	string key, not_exist_key = "123456";
+	int count, ind = 0;
+	
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		for (size_t j = 0; j < data[i].value.size(); j++)
+		{
+			ind++;
+			key = data[i].value[j].key;
+			count = 0;
+			
+			start_measuring();
+			while (get_measured() < 0.03 * 1000)
+			{
+				f(key, data);
+				count++;
+			}
+			
+			t = get_measured() / 1000 / count;
+			
+			cout << ind << " " << t << endl;
+			
+			if (min_t > t)
+				min_t = t;
+			if (max_t < t)
+				max_t = t;
+			avg_t += t;
+		}
+	}
+	
+	avg_t /= data.size();
+	
+	count = 0;
+	start_measuring();
+	while (get_measured() < 0.07 * 1000)
+	{
+		f(not_exist_key, data);
+		count++;
+	}
+	
+	t = get_measured() / 1000;
+	cout << "NOT EXISTS" << " " << t << endl;
+	
+	cout << "\nМаксимальное время:\t" << max_t << endl;
+	cout << "Минимальное время:\t" << min_t << endl;
+	cout << "Среднее время:\t\t" << avg_t << endl;
+}
+\end{lstlisting}
+
+\section*{Вывод}
+\addcontentsline{toc}{section}{Вывод}
+\qquadТаким образом, приведены листинги кода каждой из функций, реализующих алгоритмы поиска ключа в словаре, а также листинг тестовых функций, направленных на проверку корректности их работы.
