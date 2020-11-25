@@ -1,0 +1,118 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{setspace} % для междустрочного интервала
+\onehalfspacing % 1.5 интервал между строками
+
+\usepackage[left=30mm, top=20mm, right=20mm, bottom=20mm, nohead, footskip=7mm]{geometry}
+
+\usepackage{titlesec, blindtext, color} 
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter{. }}{0pt}{\Large\bfseries}
+\titlespacing{\chapter}{-5pt}{-30pt}{12pt} % отступ заголовка сверху
+\titleformat{\section}[hang]{\large\bfseries}{\thesection{. }}{0pt}{\large\bfseries}
+
+\makeatletter % список литературы
+\def\@biblabel#1{#1. }
+\makeatother
+
+% Ссылки
+\usepackage{hyperref}
+
+% Возможность вставки pdf страниц
+\usepackage{pdfpages}
+
+% Листинги
+\usepackage{listings}
+
+\lstset{
+	language = c++,
+	extendedchars=\true,
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,
+	showtabs=false,
+	frame=single,
+	tabsize=2,
+	captionpos=t,
+	breaklines=true,
+	breakatwhitespace=false,
+	escapeinside={\#*}{*)},
+	keepspaces=true
+}
+
+% Чтобы вместо : в подписях было -
+\RequirePackage{caption}
+\DeclareCaptionLabelSeparator{defffis}{ — }
+\captionsetup{justification=centering,labelsep=defffis}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.9}
+
+
+\begin{document}
+	\renewcommand\bibname{Список литературы}
+	
+	\includepdf[pages=1]{title.pdf}
+	
+	\tableofcontents
+	\newpage
+	
+	\chapter*{Введение}
+	\addcontentsline{toc}{chapter}{Введение}
+	\input{introduction.tex}
+	\newpage
+	
+	\chapter{Аналитическая часть}
+	\input{analytical_part.tex}
+	\newpage
+	
+	\chapter{Конструкторская часть}
+	\input{construction_part.tex}
+	\newpage
+	
+	\chapter{Технологическая часть}
+	\input{technological_part.tex}
+	\newpage
+	
+	\chapter{Экспериментальная часть}
+	\input{experimental_part.tex}
+	\newpage
+	
+	\chapter*{Заключение}
+	\addcontentsline{toc}{chapter}{Заключение}
+	\input{conclusion.tex}
+	\newpage
+	
+	\begin{thebibliography}{2}
+		\addcontentsline{toc}{chapter}{Список литературы}
+		\bibitem{Conveyor} Конвейерная организация [Электронный ресурс]. Режим доступа: 
+		http://citforum.ru/hardware/appkis/glava34.shtml, 
+		свободный (дата обращения: 01.11.2020)
+		
+		\bibitem{cript} Романьков В.А Введение в криптографию: курс лекций, 2009. — 238 с. — ISBN 5777909825.
+		
+		\bibitem{cript2} Фред Б. Риксон. Коды, шифры, сигналы и тайная передача информации. — Астрель, 2011. — ISBN 978-5-17-074391-9.
+		
+		\bibitem{thread} Документация по Стандартной библиотекн языка С++ thread [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/ru-ru/cpp/standard-library/thread?view=vs-2019, свободный (дата обращения 06.11.2020)
+		
+		\bibitem{mutex} Документация по Стандартной библиотекн языка С++ mutex [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/ru-ru/cpp/standard-library/mutex?view=vs-2019, свободный (дата обращения 06.11.2020)
+		
+		\bibitem{queue} Документация по Стандартной библиотекн языка С++ queue [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/ru-ru/cpp/standard-library/queue-class?view=msvc-160
+		(дата обращения 06.11.2020)
+		
+		\bibitem{Visual} Документация по Visual Studio 2019 [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/ru-ru/visualstudio/windows/?view=vs-2019, свободный (дата обращения: 05.11.2020)	
+		
+		\bibitem{Query} QueryPerformanceCounter function [Электронный ресурс]. Режим доступа: https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter, свободный (дата обращения: 08.11.2020).
+	\end{thebibliography}
+\end{document}
+
+	\end{thebibliography}
+	
+\end{document}
