@@ -21,9 +21,15 @@
     <ClCompile Include="full_search.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="ant_search.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="full_search.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ant_search.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
