@@ -140,7 +140,7 @@ void increase_phr(matrix_double_t& pheromone, vector<ant_t> colony, double q)
 
 void elite_increase(double q, vector<int>& tour, int len, matrix_double_t& phr)
 {
-	int num_el_ant = 4;
+	int num_el_ant = 2;
 
 	for (int i = 0; i < tour.size() - 1; i++)
 	{
@@ -148,6 +148,7 @@ void elite_increase(double q, vector<int>& tour, int len, matrix_double_t& phr)
 		int node2 = tour[i + 1];
 
 		phr[node1][node2] += num_el_ant * q / len;
+		phr[node2][node1] += num_el_ant * q / len;
 	}
 }
 
