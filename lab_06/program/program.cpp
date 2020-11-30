@@ -88,7 +88,7 @@ int main()
     srand(time(NULL));
     setlocale(LC_ALL, "Russian");
 
-    int n, choice, cur_len, min_len;
+    int n, choice, cur_len, min_len = 1e7;
     matrix_t c;
     vector<int> temp_res, result;
     double j;
@@ -124,8 +124,6 @@ int main()
         {
             for (double i = 0.0; i <= 1.0; i += 0.1)
             {
-                min_len = 1e7;
-
                 for (double q = 0.0; q <= 1.0; q += 0.1)
                 {
                     for (int k = 0; k < 3; k++)
