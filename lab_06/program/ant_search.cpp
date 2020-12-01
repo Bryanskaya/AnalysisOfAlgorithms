@@ -142,6 +142,9 @@ void elite_increase(double q, vector<int>& tour, int len, matrix_double_t& phr)
 {
 	int num_el_ant = 2;
 
+	if (!tour.size())
+		return;
+
 	for (int i = 0; i < tour.size() - 1; i++)
 	{
 		int node1 = tour[i];

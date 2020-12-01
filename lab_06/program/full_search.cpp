@@ -35,9 +35,9 @@ int find_cost(vector<int> vect, matrix_t& c)
 	return res;
 }
 
-void full_search(matrix_t& c, int n)
+int full_search(matrix_t& c, int n, vector<int>& result)
 {
-	vector<int> temp, tour;
+	vector<int> temp, tour = {};
 	matrix_t prm = create_permutations(n);
 	int num = prm.size(), min = 1e5, cost;
 
@@ -56,10 +56,14 @@ void full_search(matrix_t& c, int n)
 		}
 	}
 
-	cout << "Found tour: ";
+	/*cout << "Found tour: ";
 	for (int i = 0; i < tour.size(); i++)
 		cout << tour[i] << " ";
 	cout << endl;
 
-	cout << "Its length: " << min << endl;
+	cout << "Its length: " << min << endl;*/
+
+	result = tour;
+
+	return min;
 }

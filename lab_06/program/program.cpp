@@ -3,6 +3,7 @@
 
 #include "full_search.h"
 #include "ant_search.h"
+#include "tests.h"
 
 
 using namespace std;
@@ -109,6 +110,7 @@ int main()
     {
         cout << "\n\n1 - Полный перебор\n";
         cout << "2 - Муравьиный алгоритм\n";
+        cout << "3 - Запустить тесты\n";
         cout << "Другое - выход\n";
 
         cout << "\nВаш выбор: ";
@@ -118,7 +120,12 @@ int main()
 
         if (choice == 1)
         {
-            full_search(c, n);
+            min_len = full_search(c, n, result);
+
+            cout << "Found tour: ";
+            for (int i = 0; i < result.size(); i++)
+                cout << result[i] << " ";
+            cout << "\nIts length: " << min_len << endl;
         }
         else if (choice == 2)
         {
@@ -150,6 +157,10 @@ int main()
             for (int i = 0; i < result.size(); i++)
                 cout << result[i] << " ";
             cout << "\nIts length: " << min_len << endl;
+        }
+        else if (choice == 3)
+        {
+            run_tests();
         }
         else
             break;

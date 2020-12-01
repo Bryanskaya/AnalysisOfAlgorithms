@@ -1,5 +1,5 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef FULL_SEARCH_H
+#define FULL_SEARCH_H
 
 #include <iostream>
 #include <memory>
@@ -12,6 +12,6 @@ using namespace std;
 
 typedef vector<vector<int>> matrix_t;
 
-void full_search(matrix_t& c, int n);
+int full_search(matrix_t& c, int n, vector<int>& result);
 
-#endif // MATRIX_H
+#endif // FULL_SEARCH_H
