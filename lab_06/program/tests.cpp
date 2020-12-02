@@ -5,9 +5,10 @@ bool test(matrix_t& c)
 {
     vector<int> res1, res2;
     int len1, len2;
+    double q = find_avg_path(c);
 
     len1 = full_search(c, c.size(), res1);
-    len2 = ant_search(0.5, 0.5, c, 100, res2);
+    len2 = ant_search(0.5, 0.5, c, 0.5, q, 100, res2);
 
     if (len1 == len2 || res1.size() == 0 && res2.size() == 0)
         return true;
