@@ -141,12 +141,16 @@
   <ItemGroup>
     <ClCompile Include="ant_search.cpp" />
     <ClCompile Include="full_search.cpp" />
+    <ClCompile Include="global_info.cpp" />
+    <ClCompile Include="measure_time.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ant_search.h" />
     <ClInclude Include="full_search.h" />
+    <ClInclude Include="global_info.h" />
+    <ClInclude Include="measure_time.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
