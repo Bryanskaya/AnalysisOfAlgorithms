@@ -260,6 +260,56 @@ void ant_search(double a, double b, matrix_t& c, double k_vpr)
 }
 \end{lstlisting}
 
+\section{Автоматизация параметризации}
+\qquadБыла написана специальная функция параметризации, ориентированная на проработки муравьиного алгоритма на разных наборах параметров. Её реализация указана в листинге \ref{code_auto}.
+
+\begin{lstlisting}[label=code_auto, caption = Тесты]
+void find_params(matrix_t& c, int goal_len)
+{
+	int cur_len, min_len = 1e5;
+	vector<int> temp_res, result;
+	params_t prm, prm_res;
+	double q = find_avg_path(c);
+	
+	for (double a = 0; a <= 1; a += 0.1)
+	{
+		double b = 1 - a;
+		
+		for (double ro = 0; ro <= 1; ro += 0.1)
+		{
+			int temp_min = 1e5;
+			prm = create_params(a, q, ro, 30);
+			
+			for (int k = 0; k < 3; k++)
+			{
+				cur_len = ant_search(prm.a, prm.b, c, prm.ro, prm.q, prm.t_max, temp_res);
+				if (cur_len < temp_min)
+				{
+					temp_min = cur_len;
+					result = temp_res;
+				}
+			}
+			
+			cout << prm.a << " " << prm.ro << " " << prm.t_max << " " << temp_min << " " << temp_min - goal_len << endl;
+			
+			if (temp_min < min_len)
+			{
+				min_len = temp_min;
+				prm_res = prm;
+			}
+		}
+		cout << endl;
+	}
+	
+	cout << "Наилучший набор параметров для данной задачи: " << prm_res.a << " " << prm_res.b << " " << prm_res.ro << " " << prm_res.t_max << endl;
+	
+	cout << "Найденный путь: ";
+	for (int i = 0; i < result.size(); i++)
+		cout << result[i] << " ";
+	cout << "\nЕго длина: " << min_len << endl;
+}
+\end{lstlisting}
+
 \section{Результаты тестов}
 \qquadДля тестирования были написаны функции, проверяющие, согласно заготовкам выше, случаи. Выводы о корректности работы делаются на основе сравнения результатов.\\
 
@@ -333,7 +383,47 @@ void run_tests()
 \qquadПроцессорное время измеряется с помощью функции QueryPerformanceCounter библиотеки windows.h. \cite{Query} Осуществление замеров показано ниже (Листинг \ref{code_time}).
 
 \begin{lstlisting}[label=code_time, caption = Замеры процессорного времени]
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+void start_measuring()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
 	
+	PCFreq = double(li.QuadPart) / 1000;
+	
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double get_measured()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+
+void run_measuring_time(int size)
+{
+	matrix_t c = random_matrix(0, 100, size);
+	vector<int> res;
+	double q = find_avg_path(c);
+	int count = 0;
+	
+	cout << "-> Количество городов: " << size << "\t";
+	
+	start_measuring();
+	while (get_measured() < 3 * 1000)
+	{
+		ant_search(0.5, 0.5, c, 0.8, q, 30, res);
+		count++;
+	}
+	
+	double t = get_measured() / 1000 / count;
+	cout << t << endl;
+}
 \end{lstlisting}
 
 \section*{Вывод}
