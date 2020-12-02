@@ -19,7 +19,7 @@ typedef struct
 	int len_path;
 }ant_t;
 
-int ant_search(double a, double b, matrix_t& c, double k_vpr, vector<int>& result);
-
+double find_avg_path(matrix_t& c);
+int ant_search(double a, double b, matrix_t& c, double k_vpr, double q, int t_max, vector<int>& result);
 
 #endif // ANT_SEARCH_H

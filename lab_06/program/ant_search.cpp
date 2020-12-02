@@ -155,11 +155,11 @@ void elite_increase(double q, vector<int>& tour, int len, matrix_double_t& phr)
 	}
 }
 
-int ant_search(double a, double b, matrix_t& c, double k_vpr, vector<int>& result)
+int ant_search(double a, double b, matrix_t& c, double k_vpr, double q, int t_max, vector<int>& result)
 {
-	double q = find_avg_path(c);
+	//double q = find_avg_path(c);
 	matrix_double_t pheromone = create_pheromone(c.size());
-	int t_max = 100, len = 1e7;
+	int len = 1e7;
 	vector<int> tour;
 
 	for (int t = 0; t < t_max; t++)
