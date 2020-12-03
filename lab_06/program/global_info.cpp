@@ -73,9 +73,9 @@ void print_matrix(matrix_t& c)
         for (int j = 0; j < c[i].size(); j++)
         {
             if (i != j)
-                cout << c[i][j] << " ";
+                cout << c[i][j] << "& ";
             else
-                cout << " - ";
+                cout << " 0& ";
         }
         cout << endl;
     }
@@ -108,7 +108,7 @@ void find_params(matrix_t& c, int goal_len)
         for (double ro = 0; ro <= 1; ro += 0.1)
         {
             int temp_min = 1e5;
-            prm = create_params(a, q, ro, 30);
+            prm = create_params(a, q, ro, 15);
 
             for (int k = 0; k < 3; k++)
             {
@@ -119,8 +119,9 @@ void find_params(matrix_t& c, int goal_len)
                     result = temp_res;
                 }
             }
+            string str = " \\\\";
 
-            cout << prm.a << " " << prm.ro << " " << prm.t_max << " " << temp_min << " " << temp_min - goal_len << endl;
+            cout << prm.a << "& " << prm.ro << "& " << prm.t_max << "& " << temp_min << "& " << temp_min - goal_len << str <<  endl;
 
             if (temp_min < min_len)
             {

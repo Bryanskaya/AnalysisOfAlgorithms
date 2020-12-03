@@ -30,8 +30,8 @@ int main()
         return -1;
     }
 
-    //c = input_matrix(n);
-    c = random_matrix(1, 1000, n);
+    c = input_matrix(n);
+    //c = random_matrix(1, 1000, n);
     print_matrix(c);
 
     while (true)
